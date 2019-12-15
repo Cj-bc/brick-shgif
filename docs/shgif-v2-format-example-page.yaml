@@ -4,7 +4,7 @@ format: Page # one of 'page'/'plot'/'line'
 width: 33
 heigh: 8
 data:
-  - timestamp: 1
+  - timestamp: 0
     contents:
       - "#    # ###### #      #        ##  "
       - "#    # #      #      #      :#  #:"
@@ -15,7 +15,7 @@ data:
       - "#    # #      #      #      #.  .#"
       - "#    # #      #      #      :#  #:"
       - "#    # ###### ###### ######   ##  "
-  - timestamp: 2
+  - timestamp: 1
     contents:
       - "       #    # ###### #      #     "
       - "       #    # #      #      #     "
@@ -26,7 +26,7 @@ data:
       - "       #    # #      #      #     "
       - "       #    # #      #      #     "
       - "       #    # ###### ###### ######"
-  - timestamp: 3
+  - timestamp: 2
     contents:
       - "  ##         #    # ###### #      "
       - ":#  #:       #    # #      #      "

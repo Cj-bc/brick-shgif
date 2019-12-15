@@ -18,6 +18,8 @@ import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
 import Tart.Canvas (Canvas, canvasFromText)
 
 -- | format  of shgif file
+-- Currently only Page is suported
+-- TODO: Support other format
 data Format = Page -- ^ list data as list of String
             | Plot -- ^ list data based on its coordinate
             deriving (Generic, Show)
@@ -39,6 +41,7 @@ makeLenses ''Shgif
 instance FromJSON Format
 
 
+-- instance FromJSON Shgif {{{
 instance FromJSON Shgif where
   parseJSON = withObject "Shgif" $ \v -> Shgif
         <$> v .: "title"
@@ -65,6 +68,7 @@ parseContents :: Value -> Parser [String]
 parseContents = withArray "contents" $ \a -> return $ V.toList $ V.map (toStr) a
     where
         toStr (String a) = unpack a
+-- }}}
 
 
 -- | Convert Shgif into Tart.Canvas datatype
@@ -74,5 +78,3 @@ shgifToCanvas (Shgif _ _ _ w h tick ds) =
     let currentFrame t = fromMaybe (currentFrame (t-1)) $ lookup t ds
         frame = currentFrame tick :: [String]
     in canvasFromText $ unlines frame
-
-

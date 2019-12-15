@@ -17,9 +17,9 @@ data Format = Page -- ^ list data as list of String
             | Plot -- ^ list data based on its coordinate
             deriving (Generic, Show)
 
-type TimeStamp = (Float, [String])
+type TimeStamp = (Int, [String])
 
-timeStamp :: Float -> [String] -> TimeStamp
+timeStamp :: Int -> [String] -> TimeStamp
 timeStamp time ds = (time, ds)
 
 -- | The main datatype that holds Shgif data

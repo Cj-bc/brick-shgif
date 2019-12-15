@@ -22,11 +22,13 @@ type TimeStamp = (Float, [String])
 timeStamp :: Float -> [String] -> TimeStamp
 timeStamp time ds = (time, ds)
 
+-- | The main datatype that holds Shgif data
 data Shgif = Shgif { _title     :: String
                    , _author    :: String
                    , _format    :: Format
                    , _width     :: Int
                    , _heigh     :: Int
+                   , _currentTick :: Int
                    , _shgifData :: [TimeStamp]  -- ^ [(Time, String to write)]
                     } deriving (Show)
 
@@ -42,8 +44,8 @@ instance FromJSON Shgif where
         <*> v .: "format"
         <*> v .: "width"
         <*> v .: "heigh"
+        <*> return 0
         <*> parseFrame (v ! "data")
-
 
 parseFrame :: Value -> Parser [TimeStamp]
 parseFrame = withArray "data" $ \a -> sequence $ V.toList $ V.map parseTimeStamp a

@@ -26,6 +26,9 @@ dependencies:
 - brick
 - tart
 - lens
+- aeson
+- vector
+- unordered-containers
 
 library:
   source-dirs: src

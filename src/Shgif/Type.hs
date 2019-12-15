@@ -24,9 +24,6 @@ data Format = Page -- ^ list data as list of String
 
 type TimeStamp = (Int, [String])
 
-timeStamp :: Int -> [String] -> TimeStamp
-timeStamp time ds = (time, ds)
-
 -- | The main datatype that holds Shgif data
 data Shgif = Shgif { _title     :: String
                    , _author    :: String
@@ -60,6 +57,9 @@ parseTimeStamp :: Value -> Parser TimeStamp
 parseTimeStamp = withObject "Frame" $ \f -> timeStamp
                     <$> f .: "timestamp"
                     <*> parseContents (f ! "contents")
+    where
+        timeStamp :: Int -> [String] -> TimeStamp
+        timeStamp time ds = (time, ds)
 
 parseContents :: Value -> Parser [String]
 parseContents = withArray "contents" $ \a -> return $ V.toList $ V.map (toStr) a

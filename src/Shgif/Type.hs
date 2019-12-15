@@ -8,6 +8,7 @@ import GHC.Generics (Generic)
 import Control.Lens (makeLenses)
 import Data.HashMap.Lazy ((!))
 import qualified Data.Vector as V
+import Data.Text (unpack)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , Parser(..), Value(..))
 
@@ -54,4 +55,6 @@ parseTimeStamp = withObject "Frame" $ \f -> timeStamp
                     <*> parseContents (f ! "contents")
 
 parseContents :: Value -> Parser [String]
-parseContents = withArray "contents" $ \a -> return $ V.toList $ V.map show a
+parseContents = withArray "contents" $ \a -> return $ V.toList $ V.map (toStr) a
+    where
+        toStr (String a) = unpack a

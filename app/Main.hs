@@ -19,6 +19,7 @@ app :: App AppState TickEvent Name
 app = App {appDraw = ui
           , appHandleEvent = eHandler
           , appStartEvent = return
+          , appChooseCursor = neverShowCursor
           , appAttrMap = const $ attrMap Vty.defAttr [] }
 
 ui :: AppState -> [Widget Name]

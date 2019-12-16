@@ -94,6 +94,10 @@ addInitialCanvas sgf = do
 
 updateShgif :: Shgif -> IO Shgif
 updateShgif shgif@(Shgif t a f w h tick ds c) = do
-    let tick' = tick + 1
+    let tick' = repeat lastTimeStamp $ tick + 1
     newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
     return $ Shgif t a f w h tick' ds (Just newC)
+    where
+        lastTimeStamp = fst $ head $ reverse ds
+        repeat max val | max < val = 0
+                       | otherwise = val

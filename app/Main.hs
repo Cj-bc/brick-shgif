@@ -26,12 +26,11 @@ eHandler s (AppEvent Tick)  = updateShgif s >>= continue
 main :: IO ()
 main = do
     -- Read Shgif data from File
-    sgf <- case (decodeFileEither "docs/shgif-v2-format-example-page.yaml" :: Either ParseException Shgif) of
-                -- Complete initializing Shgif by adding @Canvas@
-                Right y -> return $ addInitialCanvas y
-                Left e  -> putStrLn $ show e >> exitFailure
+    sgf <- (decodeFileEither "docs/shgif-v2-format-example-page.yaml" :: IO (Either ParseException Shgif))
 
-    -- Include sgf into your 'State'
+    when (isLeft sgf) $ exitFailure
+    let fromRight (Right a) = a
+    sgf' <- addInitialCanvas $ fromRight sgf
 
-    finalState <- mainWithTick Nothing 1000 app sgf
+    finalState <- mainWithTick Nothing 1000 app sgf'
     return ()

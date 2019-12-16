@@ -39,5 +39,5 @@ main = do
     let fromRight (Right a) = a
     sgf' <- addInitialCanvas $ fromRight sgf
 
-    finalState <- mainWithTick Nothing 1000 app sgf'
+    finalState <- mainWithTick Nothing 400000 app sgf'
     return ()

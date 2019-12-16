@@ -4,7 +4,7 @@
 
 module Shgif.Type (
     Format(..), Shgif(..)
-    , shgifToCanvas
+    , shgifToCanvas, updateShgif, addInitialCanvas
 ) where
 
 import GHC.Generics (Generic)
@@ -90,3 +90,9 @@ addInitialCanvas :: Shgif -> IO Shgif
 addInitialCanvas sgf = do
     newC <- newCanvas (sgf^.width, sgf^.heigh) -- XXXX: is it correct order? (width, heigh)
     return $ canvas .~ (Just newC) $ sgf
+
+updateShgif :: Shgif -> IO Shgif
+updateShgif shgif@(Shgif t a f w h tick ds c) = do
+    let tick' = tick + 1
+    newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
+    return $ Shgif t a f w h tick' ds (Just newC)

@@ -28,6 +28,7 @@ ui s = [shgif s]
 eHandler :: AppState -> BrickEvent Name TickEvent -> EventM Name (Next AppState)
 eHandler s (VtyEvent (Vty.EvKey (Vty.KChar 'q') [])) = halt s
 eHandler s (AppEvent Tick)  = liftIO (updateShgif s) >>= continue
+eHandler s _ = continue s
 
 main :: IO ()
 main = do

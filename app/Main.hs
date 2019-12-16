@@ -34,4 +34,4 @@ main = do
     -- Include sgf into your 'State'
 
     finalState <- mainWithTick Nothing 1000 app sgf
-    return
+    return ()

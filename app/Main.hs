@@ -1,7 +1,10 @@
 module Main where
 
 import Data.Yaml (decodeFileEither, ParseException)
+import Data.Either (isLeft)
 import System.Exit (exitFailure)
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad (when)
 import qualified Graphics.Vty as Vty
 import Brick
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)

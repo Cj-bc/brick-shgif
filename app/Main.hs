@@ -5,6 +5,7 @@ import System.Exit (exitFailure)
 import qualified Graphics.Vty as Vty
 import Brick
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
+import Brick.Extensions.Shgif.Widgets (shgif)
 import Shgif.Type (Shgif(..), updateShgif, addInitialCanvas)
 
 type AppState = Shgif
@@ -16,8 +17,8 @@ app = App {appDraw = ui
           , appStartEvent = return
           , appAttrMap = const $ attrMap Vty.defAttr [] }
 
-ui :: AppState -> [Widget n]
-ui = Shgif
+ui :: AppState -> [Widget Name]
+ui s = [shgif s]
 
 eHandler :: AppState -> BrickEvent n TickEvent -> EventM n (Next AppState)
 eHandler s (VtyEvent (Vty.EvKey (Vty.KChar 'q') [])) = halt s

@@ -34,7 +34,8 @@ data Shgif = Shgif { _title     :: String
                    , _heigh     :: Int
                    , _currentTick :: Int
                    , _shgifData :: [TimeStamp]  -- ^ [(Time, String to write)]
-                    } deriving (Show)
+                   , _canvas :: Maybe Canvas
+                    }
 
 makeLenses ''Shgif
 
@@ -51,6 +52,7 @@ instance FromJSON Shgif where
         <*> v .: "heigh"
         <*> return 0
         <*> parseFrame (v ! "data")
+        <*> return Nothing
 
 parseFrame :: Value -> Parser [TimeStamp]
 parseFrame = withArray "data" $ \a -> sequence $ V.toList $ V.map parseTimeStamp a
@@ -74,7 +76,7 @@ parseContents = withArray "contents" $ \a -> return $ V.toList $ V.map (toStr) a
 -- | Convert Shgif into Tart.Canvas datatype
 -- This function only determine which frame to render, and pass it to @canvasFromText@
 shgifToCanvas :: Shgif -> IO Canvas
-shgifToCanvas (Shgif _ _ _ w h tick ds) =
+shgifToCanvas (Shgif _ _ _ w h tick ds _) =
     let currentFrame t = fromMaybe (currentFrame (t-1)) $ lookup t ds
         frame = currentFrame tick :: [String]
     in canvasFromText $ unlines frame

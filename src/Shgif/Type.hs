@@ -5,6 +5,7 @@
 module Shgif.Type (
     Format(..), Shgif(..)
     , shgifToCanvas, updateShgif, addInitialCanvas
+    , canvas, width, heigh
 ) where
 
 import GHC.Generics (Generic)

@@ -98,7 +98,7 @@ updateShgif shgif@(Shgif t a f w h tick ds c) = do
     newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
     return $ Shgif t a f w h tick' ds (Just newC)
     where
-        lastTimeStamp = fst $ head $ reverse ds
+        lastTimeStamp = maximum $ map fst ds
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | max < val = 0
                        | otherwise = val

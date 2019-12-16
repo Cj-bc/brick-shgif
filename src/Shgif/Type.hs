@@ -99,5 +99,6 @@ updateShgif shgif@(Shgif t a f w h tick ds c) = do
     return $ Shgif t a f w h tick' ds (Just newC)
     where
         lastTimeStamp = fst $ head $ reverse ds
+        -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | max < val = 0
                        | otherwise = val

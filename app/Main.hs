@@ -35,8 +35,9 @@ main = do
     -- Read Shgif data from File
     sgf <- (decodeFileEither "docs/shgif-v2-format-example-page.yaml" :: IO (Either ParseException Shgif))
 
-    when (isLeft sgf) $ exitFailure
-    let fromRight (Right a) = a
+    let fromLeft  (Left e)  = e
+        fromRight (Right a) = a
+    when (isLeft sgf) $ putStrLn ( show $ fromLeft sgf) >> exitFailure
     sgf' <- addInitialCanvas $ fromRight sgf
 
     finalState <- mainWithTick Nothing 400000 app sgf'

@@ -2,7 +2,8 @@ module Main where
 
 import Data.Yaml (decodeFileEither, ParseException)
 import Data.Either (isLeft)
-import System.Exit (exitFailure)
+import System.Exit (exitFailure, exitSuccess)
+import System.Environment (getArgs)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad (when)
 import qualified Graphics.Vty as Vty
@@ -32,8 +33,11 @@ eHandler s _ = continue s
 
 main :: IO ()
 main = do
+    args <- getArgs
+    when (args == []) $ putStrLn "usage: shgifView <shgif-filename>" >> exitSuccess
+
     -- Read Shgif data from File
-    sgf <- (decodeFileEither "docs/shgif-v2-format-example-page.yaml" :: IO (Either ParseException Shgif))
+    sgf <- (decodeFileEither (head args) :: IO (Either ParseException Shgif))
 
     let fromLeft  (Left e)  = e
         fromRight (Right a) = a

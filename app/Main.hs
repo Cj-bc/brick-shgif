@@ -40,5 +40,6 @@ main = do
     when (isLeft sgf) $ putStrLn ( show $ fromLeft sgf) >> exitFailure
     sgf' <- addInitialCanvas $ fromRight sgf
 
-    finalState <- mainWithTick Nothing 400000 app sgf'
+    let ms = 1000
+    finalState <- mainWithTick Nothing ms app sgf'
     return ()

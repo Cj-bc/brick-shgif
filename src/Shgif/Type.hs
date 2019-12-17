@@ -5,7 +5,7 @@
 module Shgif.Type (
     Format(..), Shgif(..)
     , shgifToCanvas, updateShgif, addInitialCanvas
-    , canvas, width, heigh
+    , canvas, width, height
 ) where
 
 import GHC.Generics (Generic)
@@ -32,7 +32,7 @@ data Shgif = Shgif { _title     :: String
                    , _author    :: String
                    , _format    :: Format
                    , _width     :: Int
-                   , _heigh     :: Int
+                   , _height    :: Int
                    , _currentTick :: Int
                    , _shgifData :: [TimeStamp]  -- ^ [(Time, String to write)]
                    , _canvas :: Maybe Canvas
@@ -50,7 +50,7 @@ instance FromJSON Shgif where
         <*> v .: "author"
         <*> v .: "format"
         <*> v .: "width"
-        <*> v .: "heigh"
+        <*> v .: "height"
         <*> return 0
         <*> parseFrame (v ! "data")
         <*> return Nothing
@@ -89,7 +89,7 @@ shgifToCanvas (Shgif _ _ _ w h tick ds _) =
 -- Instead, I give it canvas here.
 addInitialCanvas :: Shgif -> IO Shgif
 addInitialCanvas sgf = do
-    newC <- newCanvas (sgf^.width, sgf^.heigh) -- XXXX: is it correct order? (width, heigh)
+    newC <- newCanvas (sgf^.width, sgf^.height) -- XXXX: is it correct order? (width, height)
     return $ canvas .~ (Just newC) $ sgf
 
 updateShgif :: Shgif -> IO Shgif

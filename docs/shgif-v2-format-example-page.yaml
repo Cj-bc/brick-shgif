@@ -2,7 +2,7 @@ title: shgif-v2-format-example-page
 author: Cj-bc
 format: Page # one of 'page'/'plot'/'line'
 width: 33
-heigh: 8
+height: 8
 data:
   - timestamp: 0
     contents:

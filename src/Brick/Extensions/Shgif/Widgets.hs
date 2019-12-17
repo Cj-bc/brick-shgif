@@ -11,7 +11,7 @@ import Brick.Widgets.Border (border)
 import Tart.Canvas (Canvas(..), canvasLayersToImage)
 
 shgif :: Shgif -> Widget n
-shgif s | isNothing (s^.T.canvas) = raw $ Vty.charFill Vty.defAttr ' ' (s^.T.width) (s^.T.heigh) -- Is order correct? (width, heigh) ?
+shgif s | isNothing (s^.T.canvas) = raw $ Vty.charFill Vty.defAttr ' ' (s^.T.width) (s^.T.height) -- Is order correct? (width, height) ?
         |otherwise               = canvas $ fromJust $ s^.T.canvas
 
 canvas :: Canvas -> Widget n

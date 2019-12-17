@@ -77,10 +77,22 @@ parseContents = withArray "contents" $ \a -> return $ V.toList $ V.map (toStr) a
 -- | Convert Shgif into Tart.Canvas datatype
 -- This function only determine which frame to render, and pass it to @canvasFromText@
 shgifToCanvas :: Shgif -> IO Canvas
-shgifToCanvas (Shgif _ _ _ w h tick ds _) =
-    let currentFrame t = fromMaybe (currentFrame (t-1)) $ lookup t ds
-        frame = currentFrame tick :: [String]
-    in canvasFromText $ unlines frame
+shgifToCanvas (Shgif _ _ _ w h tick ds _) = canvasFromText $ unlines $ map (addWidthPadding w) $ addHeightPadding  h frame
+    where
+        currentFrame t = fromMaybe (currentFrame (t-1)) $ lookup t ds
+        frame :: [String]
+        frame = currentFrame tick
+
+        addWidthPadding :: Int -> String -> String
+        addWidthPadding _ [] = []
+        addWidthPadding req_width x | length x < req_width = x ++ replicate (req_width - (length x)) ' '
+                                    | otherwise            = x
+
+        addHeightPadding :: Int -> [String] -> [String]
+        addHeightPadding req_height xs | length xs < req_height = xs ++ replicate (req_height - length xs) ""
+                                       | otherwise              = xs
+
+
 
 -- | Add initialized @Canvas@
 --

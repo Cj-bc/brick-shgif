@@ -8,7 +8,7 @@ The shgif *format is changed* so that doesn't support original [Cj-bc/shgif](htt
 
 # Examples
 
-## stack run example/shgifs/face_blinking.yaml
+### `stack run example/shgifs/face_blinking.yaml`
 
 ![face-blinking.gif](docs/img/face-blinking.gif)
 

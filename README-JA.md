@@ -8,7 +8,7 @@ English: [README.md](README.md)
 
 # 例
 
-## example/shgifs/face_blinking.yaml
+### `example/shgifs/face_blinking.yaml`
 
 ![face-blinking.gif](docs/img/face-blinking.gif)
 

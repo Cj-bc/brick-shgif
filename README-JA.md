@@ -3,10 +3,12 @@ English: [README.md](README.md)
 
 # brick-shgif
 
-[Cj-bc/shgif](https://github.com/Cj-bc/shgif)の発想を[jtdaugherty/brick](https://github.com/jtdaugherty/brick)上で実装したモジュールです。
+[Cj-bc/shgif](https://github.com/Cj-bc/shgif)の発想を[jtdaugherty/brick](https://github.com/jtdaugherty/brick)上で実装したモジュールです。  
 オリジナルの[Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは**違うフォーマット**を使用しています。
 
 # 例
+
+## example/shgifs/face_blinking.yaml
 
 ![face-blinking.gif](docs/img/face-blinking.gif)
 

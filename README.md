@@ -6,6 +6,9 @@
 Implement [Cj-bc/shgif](https://github.com/Cj-bc/shgif) on [jtdaugherty/brick](https://github.com/jtdaugherty/brick)
 The shgif *format is changed* so that doesn't support original [Cj-bc/shgif](https://github.com/Cj-bc/shgif) format.
 
+# Examples
+
+![face-blinking.gif](docs/img/face-blinking.gif)
 
 # Build
 
@@ -17,4 +20,3 @@ The shgif *format is changed* so that doesn't support original [Cj-bc/shgif](htt
 
 1. write data by using `shgif` format (document on [docs/shgif-format.md](docs/shgif-format.md))
 2. execute `stack run <file>`
-

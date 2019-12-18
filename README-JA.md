@@ -6,6 +6,10 @@ English: [README.md](README.md)
 [Cj-bc/shgif](https://github.com/Cj-bc/shgif)の発想を[jtdaugherty/brick](https://github.com/jtdaugherty/brick)上で実装したモジュールです。
 オリジナルの[Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは**違うフォーマット**を使用しています。
 
+# 例
+
+![face-blinking.gif](docs/img/face-blinking.gif)
+
 # Build
 
 `stack build`

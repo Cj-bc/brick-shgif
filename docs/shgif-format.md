@@ -32,5 +32,3 @@ data: # list of shgif frame
 This example can be run by `stack run example/shgifs/example-in-shgif-format.yaml` and result in:
 
 [![asciicast](https://asciinema.org/a/288971.svg)](https://asciinema.org/a/288971)
-
-<script id="asciicast-288971" src="https://asciinema.org/a/288971.js" async></script>

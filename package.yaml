@@ -35,8 +35,8 @@ library:
   source-dirs: src
 
 executables:
-  brick-shgif-exe:
-    main:                Main.hs
+  shgifView:
+    main:                shgifView.hs
     source-dirs:         app
     ghc-options:
     - -threaded

@@ -4,7 +4,7 @@
 # brick-shgif
 
 Implement [Cj-bc/shgif](https://github.com/Cj-bc/shgif) on [jtdaugherty/brick](https://github.com/jtdaugherty/brick)  
-The shgif *format is changed* so that doesn't support original [Cj-bc/shgif](https://github.com/Cj-bc/shgif) format.
+The shgif **format is changed** so that doesn't support original [Cj-bc/shgif](https://github.com/Cj-bc/shgif) format.
 
 # Examples
 

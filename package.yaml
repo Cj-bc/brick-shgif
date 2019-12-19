@@ -35,8 +35,8 @@ library:
   source-dirs: src
 
 executables:
-  brick-shgif-exe:
-    main:                Main.hs
+  shgifView:
+    main:                shgifView.hs
     source-dirs:         app
     ghc-options:
     - -threaded
@@ -44,6 +44,15 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - brick-shgif
+  multipleShgifs:
+    main:                multipleGifs.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+      - brick-shgif
 
 tests:
   brick-shgif-test:

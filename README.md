@@ -97,7 +97,7 @@ main = do
 
 ### 4. Call `updateShgif`
 
-The function will update `Shgif`'s internal tick state, which will affect frame.  
+The function will update `Shgif`'s internal tick state, which will affect frame rendering.  
 As `updateShgif` has type `Shgif -> IO Shgif`, it can be called inside brick's `EventM` monad.
 
 ```haskell

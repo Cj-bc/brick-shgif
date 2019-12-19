@@ -18,7 +18,7 @@ import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , Parser(..), Value(..))
 import Tart.Canvas (Canvas, canvasFromText, newCanvas)
 
--- | format  of shgif file
+-- | Format  of shgif file
 -- Currently only Page is suported
 -- TODO: Support other format
 data Format = Page -- ^ list data as list of String
@@ -35,7 +35,7 @@ data Shgif = Shgif { _title     :: String
                    , _height    :: Int
                    , _currentTick :: Int
                    , _shgifData :: [TimeStamp]  -- ^ [(Time, String to write)]
-                   , _canvas :: Maybe Canvas
+                   , _canvas :: Maybe Canvas    -- ^ the canvas which will be rendered
                     }
 
 makeLenses ''Shgif
@@ -104,6 +104,9 @@ addInitialCanvas sgf = do
     newC <- newCanvas (sgf^.width, sgf^.height) -- XXXX: is it correct order? (width, height)
     return $ canvas .~ (Just newC) $ sgf
 
+-- | Update `Shgif`'s internal tick state, which will affect frame rendering.  
+-- As `updateShgif` has type `Shgif -> IO Shgif`, it can be called inside brick's `EventM` monad.
+--
 updateShgif :: Shgif -> IO Shgif
 updateShgif shgif@(Shgif t a f w h tick ds c) = do
     let tick' = repeat lastTimeStamp $ tick + 1

@@ -7,9 +7,11 @@ import Brick
 import Brick.BChan
 import Graphics.Vty
 
+-- | Simple Tick only Event
+-- Use this if you don't have any other custom Events
 data TickEvent = Tick
 
--- Create @customMain@ with Tick event support
+-- | Create @customMain@ with Tick event support
 --  difference between this & customMain:
 --    - Create new thread to Generate TickEvent
 --    - Generate 'TickEvent' every 'tickRate' microseconds.

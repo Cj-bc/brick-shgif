@@ -12,7 +12,7 @@ import Brick.Widgets.Core ((<+>))
 import Brick.Widgets.Border (border)
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
 import Brick.Extensions.Shgif.Widgets (shgif)
-import Shgif.Type (Shgif(..), updateShgif, addInitialCanvas)
+import Shgif.Type (Shgif(..), updateShgif, getShgif)
 
 type AppState = [Shgif]
 data Name = NoName deriving (Eq, Ord)
@@ -39,12 +39,12 @@ main = do
     when (null args) $ putStrLn "usage: multipleGifs <shgif-filename> [<shgif-filename>...]" >> exitSuccess
 
     -- Read Shgif data from File
-    sgf <- sequence $ map decodeFileEither args :: IO [(Either ParseException Shgif)]
+    sgf <- sequence $ map getShgif args
 
     let fromLeft  (Left e)  = e
         fromRight (Right a) = a
     when (True `elem` (map isLeft sgf)) $ putStrLn "parse error occured" >> exitFailure
-    sgf' <- sequence $ map (addInitialCanvas . fromRight) sgf
+    let (Right sgf') = sequence sgf
 
     let ms = 1000
     finalState <- mainWithTick Nothing ms app sgf'

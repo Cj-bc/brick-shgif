@@ -10,7 +10,7 @@ import qualified Graphics.Vty as Vty
 import Brick
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
 import Brick.Extensions.Shgif.Widgets (shgif)
-import Shgif.Type (Shgif(..), updateShgif, addInitialCanvas)
+import Shgif.Type (Shgif(..), updateShgif, getShgif)
 
 type AppState = Shgif
 data Name = NoName deriving (Eq, Ord)
@@ -37,12 +37,12 @@ main = do
     when (args == []) $ putStrLn "usage: shgifView <shgif-filename>" >> exitSuccess
 
     -- Read Shgif data from File
-    sgf <- (decodeFileEither (head args) :: IO (Either ParseException Shgif))
+    sgf <- getShgif $ head args
 
     let fromLeft  (Left e)  = e
         fromRight (Right a) = a
     when (isLeft sgf) $ putStrLn ( show $ fromLeft sgf) >> exitFailure
-    sgf' <- addInitialCanvas $ fromRight sgf
+    let (Right sgf') = sgf
 
     let ms = 1000
     finalState <- mainWithTick Nothing ms app sgf'

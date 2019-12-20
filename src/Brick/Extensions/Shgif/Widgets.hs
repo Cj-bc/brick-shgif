@@ -17,4 +17,4 @@ shgif s | isNothing (s^.T.canvas) = raw $ Vty.charFill Vty.defAttr ' ' (s^.T.wid
 
 -- | Widget to show Canvas (from Tart)
 canvas :: Canvas -> Widget n
-canvas c = border $ raw $ canvasLayersToImage [c]
+canvas c = raw $ canvasLayersToImage [c]

@@ -4,18 +4,21 @@
 
 module Shgif.Type (
     Format(..), Shgif(..)
-    , shgifToCanvas, updateShgif, addInitialCanvas
+    , shgifToCanvas, updateShgif, getShgif, getShgifs
     , canvas, width, height
 ) where
 
 import GHC.Generics (Generic)
 import Control.Lens (makeLenses, (.~), (^.))
+import Control.Monad (when)
 import Data.HashMap.Lazy ((!))
 import qualified Data.Vector as V
 import Data.Text (unpack)
 import Data.Maybe (fromMaybe)
+import Data.Either (isLeft)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
-                 , Parser(..), Value(..))
+                 , Parser(..), Value(..), ParseException
+                 , decodeFileEither)
 import Tart.Canvas (Canvas, canvasFromText, newCanvas)
 
 -- | Format  of shgif file
@@ -26,6 +29,7 @@ data Format = Page -- ^ list data as list of String
             deriving (Generic, Show)
 
 type TimeStamp = (Int, [String])
+type FileName = String
 
 -- | The main datatype that holds Shgif data
 data Shgif = Shgif { _title     :: String
@@ -103,6 +107,32 @@ addInitialCanvas :: Shgif -> IO Shgif
 addInitialCanvas sgf = do
     newC <- newCanvas (sgf^.width, sgf^.height) -- XXXX: is it correct order? (width, height)
     return $ canvas .~ (Just newC) $ sgf
+
+
+-- | Get 'Shgif' data from Yaml file
+getShgif :: FileName -> IO (Either ParseException Shgif)
+getShgif n = do
+    sgf <- (decodeFileEither n :: IO (Either ParseException Shgif))
+    case sgf of
+      Left e -> return $ Left e
+      Right shgif -> do
+        sgf' <- addInitialCanvas shgif
+        return $ Right sgf'
+
+
+-- | Get list of 'Shgif's from list of Yaml file
+getShgifs :: [FileName] -> IO (Either [ParseException] [Shgif])
+getShgifs xs = do
+  results <- sequence $ map getShgif xs :: IO [Either ParseException Shgif]
+  if (containsLeft results)
+    then return $ Left  $ caughtExceptions results
+    else return $ Right $ map fromRight results
+  where
+    containsLeft rs     = True `elem` map isLeft rs
+    fromLeft (Left e)   = e
+    fromRight (Right a) = a
+    caughtExceptions rs = map fromLeft $ filter isLeft rs
+
 
 -- | Update `Shgif`'s internal tick state, which will affect frame rendering.  
 -- As `updateShgif` has type `Shgif -> IO Shgif`, it can be called inside brick's `EventM` monad.

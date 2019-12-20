@@ -4,7 +4,7 @@
 
 module Shgif.Type (
     Format(..), Shgif(..)
-    , shgifToCanvas, updateShgif, addInitialCanvas
+    , shgifToCanvas, updateShgif, addInitialCanvas, getShgif
     , canvas, width, height
 ) where
 
@@ -15,7 +15,8 @@ import qualified Data.Vector as V
 import Data.Text (unpack)
 import Data.Maybe (fromMaybe)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
-                 , Parser(..), Value(..))
+                 , Parser(..), Value(..), ParseException
+                 , decodeFileEither)
 import Tart.Canvas (Canvas, canvasFromText, newCanvas)
 
 -- | Format  of shgif file
@@ -26,6 +27,7 @@ data Format = Page -- ^ list data as list of String
             deriving (Generic, Show)
 
 type TimeStamp = (Int, [String])
+type FileName = String
 
 -- | The main datatype that holds Shgif data
 data Shgif = Shgif { _title     :: String
@@ -103,6 +105,18 @@ addInitialCanvas :: Shgif -> IO Shgif
 addInitialCanvas sgf = do
     newC <- newCanvas (sgf^.width, sgf^.height) -- XXXX: is it correct order? (width, height)
     return $ canvas .~ (Just newC) $ sgf
+
+
+-- | Get 'Shgif' data from Yaml file
+getShgif :: FileName -> IO (Either ParseException Shgif)
+getShgif n = do
+    sgf <- (decodeFileEither n :: IO (Either ParseException Shgif))
+    case sgf of
+      Left e -> return $ Left e
+      Right shgif -> do
+        sgf' <- addInitialCanvas shgif
+        return $ Right sgf'
+
 
 -- | Update `Shgif`'s internal tick state, which will affect frame rendering.  
 -- As `updateShgif` has type `Shgif -> IO Shgif`, it can be called inside brick's `EventM` monad.

@@ -4,7 +4,7 @@
 
 module Shgif.Type (
     Format(..), Shgif(..)
-    , shgifToCanvas, updateShgif, addInitialCanvas, getShgif, getShgifs
+    , shgifToCanvas, updateShgif, getShgif, getShgifs
     , canvas, width, height
 ) where
 

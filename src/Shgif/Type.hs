@@ -4,16 +4,18 @@
 
 module Shgif.Type (
     Format(..), Shgif(..)
-    , shgifToCanvas, updateShgif, addInitialCanvas, getShgif
+    , shgifToCanvas, updateShgif, addInitialCanvas, getShgif, getShgifs
     , canvas, width, height
 ) where
 
 import GHC.Generics (Generic)
 import Control.Lens (makeLenses, (.~), (^.))
+import Control.Monad (when)
 import Data.HashMap.Lazy ((!))
 import qualified Data.Vector as V
 import Data.Text (unpack)
 import Data.Maybe (fromMaybe)
+import Data.Either (isLeft)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , Parser(..), Value(..), ParseException
                  , decodeFileEither)
@@ -116,6 +118,20 @@ getShgif n = do
       Right shgif -> do
         sgf' <- addInitialCanvas shgif
         return $ Right sgf'
+
+
+-- | Get list of 'Shgif's from list of Yaml file
+getShgifs :: [FileName] -> IO (Either [ParseException] [Shgif])
+getShgifs xs = do
+  results <- sequence $ map getShgif xs :: IO [Either ParseException Shgif]
+  if (containsLeft results)
+    then return $ Left  $ caughtExceptions results
+    else return $ Right $ map fromRight results
+  where
+    containsLeft rs     = True `elem` map isLeft rs
+    fromLeft (Left e)   = e
+    fromRight (Right a) = a
+    caughtExceptions rs = map fromLeft $ filter isLeft rs
 
 
 -- | Update `Shgif`'s internal tick state, which will affect frame rendering.  

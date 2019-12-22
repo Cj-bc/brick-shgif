@@ -156,6 +156,20 @@ updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = do
 --
 -- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
 --
+-- This function reverse and __won't loop__ gif.
+--
+-- Use this if you want to show reversed animation for only once.
+updateShgifReversedNoLoop :: Shgif -> IO Shgif
+updateShgifReversedNoLoop shgif@(Shgif t a f w h tick ds c) = do
+    let tick' = if 0 <= tick then tick - 1 else tick
+    newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
+    return $ Shgif t a f w h tick' ds (Just newC)
+
+
+-- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
+--
+-- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
+--
 -- This function reverse gif.
 --
 -- Use this if you want to show reversed animation.

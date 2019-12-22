@@ -6,6 +6,14 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.1.0.2] - 2019-12-22
+
+### Added
+- 'updateShgifNoLoop' that is no-loop version of 'updateShgif'
+
+### Fixied
+- Add missing 'added component' to Changelog (see above)
+
 ## [1.1.0.1] - 2019-12-22
 
 ### Changed

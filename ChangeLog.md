@@ -6,6 +6,11 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.1.3.0] - 2019-12-22
+
+### Added
+- Export 'Shgif.Type.updateShgifReversedNoLoop'
+
 ## [1.1.2.0] - 2019-12-22
 
 ### Added

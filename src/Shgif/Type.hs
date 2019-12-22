@@ -4,7 +4,7 @@
 
 module Shgif.Type (
     Format(..), Shgif(..)
-    , shgifToCanvas, updateShgifNoLoop, updateShgif, getShgif, getShgifs
+    , shgifToCanvas, updateShgifNoLoop, updateShgif, updateShgifReversed, getShgif, getShgifs
     , canvas, width, height
 ) where
 
@@ -146,6 +146,23 @@ updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = do
     return $ Shgif t a f w h tick' ds (Just newC)
     where
         lastTimeStamp = maximum $ map fst ds
+
+
+-- | Update `Shgif`'s internal tick state, which will affect frame rendering.  
+-- As `updateShgif` has type `Shgif -> IO Shgif`, it can be called inside brick's `EventM` monad.
+--
+-- This function reverse gif.
+-- Use this if you want to show reversed animation.
+updateShgifReversed :: Shgif -> IO Shgif
+updateShgifReversed shgif@(Shgif t a f w h tick ds c) = do
+    let tick' = repeat lastTimeStamp $ tick - 1
+    newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
+    return $ Shgif t a f w h tick' ds (Just newC)
+    where
+        lastTimeStamp = maximum $ map fst ds
+        -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
+        repeat max val | val < 0   = max
+                       | otherwise = val
 
 -- | Update `Shgif`'s internal tick state, which will affect frame rendering.  
 -- As `updateShgif` has type `Shgif -> IO Shgif`, it can be called inside brick's `EventM` monad.

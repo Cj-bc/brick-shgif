@@ -4,7 +4,7 @@
 
 module Shgif.Type (
     Format(..), Shgif(..)
-    , shgifToCanvas, updateShgif, getShgif, getShgifs
+    , shgifToCanvas, updateShgifNoLoop, updateShgif, getShgif, getShgifs
     , canvas, width, height
 ) where
 
@@ -133,6 +133,19 @@ getShgifs xs = do
     fromRight (Right a) = a
     caughtExceptions rs = map fromLeft $ filter isLeft rs
 
+
+-- | Update `Shgif`'s internal tick state, which will affect frame rendering.  
+-- As `updateShgif` has type `Shgif -> IO Shgif`, it can be called inside brick's `EventM` monad.
+--
+-- This function __won't loop__ gif.
+-- Use this if you want to show animation only once.
+updateShgifNoLoop :: Shgif -> IO Shgif
+updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = do
+    let tick' = if tick <= lastTimeStamp then tick + 1 else tick
+    newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
+    return $ Shgif t a f w h tick' ds (Just newC)
+    where
+        lastTimeStamp = maximum $ map fst ds
 
 -- | Update `Shgif`'s internal tick state, which will affect frame rendering.  
 -- As `updateShgif` has type `Shgif -> IO Shgif`, it can be called inside brick's `EventM` monad.

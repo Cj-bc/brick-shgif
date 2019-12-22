@@ -10,11 +10,11 @@ import Brick.Widgets.Core
 import Brick.Widgets.Border (border)
 import Tart.Canvas (Canvas(..), canvasLayersToImage)
 
--- | Widget to show Shgif file
+-- | Widget to show 'Shgif' file
 shgif :: Shgif -> Widget n
 shgif s | isNothing (s^.T.canvas) = raw $ Vty.charFill Vty.defAttr ' ' (s^.T.width) (s^.T.height) -- Is order correct? (width, height) ?
         |otherwise               = canvas $ fromJust $ s^.T.canvas
 
--- | Widget to show Canvas (from Tart)
+-- | Widget to show 'Tart.Canvas'
 canvas :: Canvas -> Widget n
 canvas c = raw $ canvasLayersToImage [c]

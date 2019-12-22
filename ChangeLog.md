@@ -1,6 +1,15 @@
 # Changelog for brick-shgif
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Haskell Package Versioning policy](https://pvp.haskell.org/).
 
 ## Unreleased changes
+
+## [1.1.0.1] - 2019-12-22
+
+### Changed
+- Use [Haskell Package Versioning policy](https://pvp.haskell.org/) instead of semantic versioning
 
 ## [1.1.0] - 2019-12-20
 

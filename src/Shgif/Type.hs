@@ -161,7 +161,7 @@ updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = do
 -- Use this if you want to show reversed animation for only once.
 updateShgifReversedNoLoop :: Shgif -> IO Shgif
 updateShgifReversedNoLoop shgif@(Shgif t a f w h tick ds c) = do
-    let tick' = if 0 <= tick then tick - 1 else tick
+    let tick' = if 0 < tick then tick - 1 else tick
     newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
     return $ Shgif t a f w h tick' ds (Just newC)
 

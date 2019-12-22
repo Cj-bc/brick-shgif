@@ -1,5 +1,5 @@
 name:                brick-shgif
-version:             1.1.0.2
+version:             1.1.1.0
 github:              "Cj-bc/brick-shgif"
 license:             BSD3
 author:              "Cj.bc_sd a.k.a Cj-bc"
@@ -53,6 +53,25 @@ executables:
     - -with-rtsopts=-N
     dependencies:
       - brick-shgif
+  reversed:
+    main:                reversed.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+      - brick-shgif
+  compareReversed:
+    main:                compareReversed.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+      - brick-shgif
+
 
 tests:
   brick-shgif-test:

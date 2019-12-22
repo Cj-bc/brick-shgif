@@ -6,6 +6,12 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.1.1.0] - 2019-12-22
+
+### Added
+- 'updateShgifReversed' that reverse shgif(play backwards)
+- Two examples for 'updateShgifReversed'
+
 ## [1.1.0.2] - 2019-12-22
 
 ### Added

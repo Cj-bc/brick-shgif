@@ -10,7 +10,7 @@ module Shgif.Type (
 ) where
 
 import GHC.Generics (Generic)
-import Control.Lens (makeLenses, (.~), (^.), (&), (-~), over, set)
+import Control.Lens (makeLenses, (.~), (^.), (&), (+~), over, set)
 import Control.Monad (when)
 import Data.HashMap.Lazy ((!))
 import qualified Data.Vector as V
@@ -213,5 +213,5 @@ updateShgifTo tick shgif  = do
                         LT -> 1
                         EQ -> 0
                         GT -> -1
-    newC <- shgifToCanvas (shgif&currentTick-~tickToAdd)
+    newC <- shgifToCanvas (shgif&currentTick+~tickToAdd)
     return $ set canvas (Just newC) $ over currentTick (+ tickToAdd) shgif

@@ -109,7 +109,8 @@ shgifToCanvas (Shgif _ _ _ w h tick ds _) = canvasFromText $ unlines $ map (addW
 addInitialCanvas :: Shgif -> IO Shgif
 addInitialCanvas sgf = do
     newC <- newCanvas (sgf^.width, sgf^.height) -- XXXX: is it correct order? (width, height)
-    return $ canvas .~ (Just newC) $ sgf
+    newC' <- shgifToCanvas $ sgf&canvas.~(Just newC)
+    return $ sgf&canvas.~(Just newC')
 
 
 -- | Get 'Shgif' data from Yaml file

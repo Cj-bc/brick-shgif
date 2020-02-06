@@ -6,6 +6,15 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.1.4.1] - 2020-02-04
+
+### Changed
+- 'addInitialCanvas' now returns Shgif with canvas rendered
+- You don't have to call 'updateShgif' just after 'getShgif' to render it.
+
+### Fixed
+- Example code in README
+
 ## [1.1.4.0] - 2020-02-04
 
 ### Added

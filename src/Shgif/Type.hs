@@ -5,11 +5,12 @@
 module Shgif.Type (
     Format(..), Shgif(..)
     , shgifToCanvas, updateShgifNoLoop, updateShgif, updateShgifReversedNoLoop, updateShgifReversed, getShgif, getShgifs
+    , updateShgifTo
     , canvas, width, height
 ) where
 
 import GHC.Generics (Generic)
-import Control.Lens (makeLenses, (.~), (^.))
+import Control.Lens (makeLenses, (.~), (^.), (&), (-~), over, set)
 import Control.Monad (when)
 import Data.HashMap.Lazy ((!))
 import qualified Data.Vector as V
@@ -145,9 +146,12 @@ getShgifs xs = do
 -- Use this if you want to show animation only once.
 updateShgifNoLoop :: Shgif -> IO Shgif
 updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = do
-    let tick' = if tick <= lastTimeStamp then tick + 1 else tick
-    newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
-    return $ Shgif t a f w h tick' ds (Just newC)
+    let updateTick | tick <= lastTimeStamp = over currentTick (+ 1)
+                   | otherwise             = id
+
+    newC <- shgifToCanvas $ updateTick shgif
+
+    return $ set canvas (Just newC) $ updateTick shgif
     where
         lastTimeStamp = maximum $ map fst ds
 
@@ -160,10 +164,11 @@ updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = do
 --
 -- Use this if you want to show reversed animation for only once.
 updateShgifReversedNoLoop :: Shgif -> IO Shgif
-updateShgifReversedNoLoop shgif@(Shgif t a f w h tick ds c) = do
-    let tick' = if 0 < tick then tick - 1 else tick
-    newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
-    return $ Shgif t a f w h tick' ds (Just newC)
+updateShgifReversedNoLoop shgif = do
+    let updateTick | 0 < (shgif^.currentTick) = over currentTick (subtract 1)
+                   | otherwise                = id
+    newC <- shgifToCanvas $ updateTick shgif
+    return $ set canvas (Just newC) $ updateTick shgif
 
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
@@ -174,12 +179,12 @@ updateShgifReversedNoLoop shgif@(Shgif t a f w h tick ds c) = do
 --
 -- Use this if you want to show reversed animation.
 updateShgifReversed :: Shgif -> IO Shgif
-updateShgifReversed shgif@(Shgif t a f w h tick ds c) = do
-    let tick' = repeat lastTimeStamp $ tick - 1
-    newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
-    return $ Shgif t a f w h tick' ds (Just newC)
+updateShgifReversed shgif = do
+    let updateTick = set currentTick (repeat lastTimeStamp $ (shgif^.currentTick) - 1)
+    newC <- shgifToCanvas $ updateTick shgif
+    return $ set canvas (Just newC) $ updateTick shgif
     where
-        lastTimeStamp = maximum $ map fst ds
+        lastTimeStamp = maximum $ map fst (shgif^.shgifData)
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | val < 0   = max
                        | otherwise = val
@@ -189,12 +194,23 @@ updateShgifReversed shgif@(Shgif t a f w h tick ds c) = do
 -- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
 --
 updateShgif :: Shgif -> IO Shgif
-updateShgif shgif@(Shgif t a f w h tick ds c) = do
-    let tick' = repeat lastTimeStamp $ tick + 1
-    newC <- shgifToCanvas $ Shgif t a f w h tick' ds c
-    return $ Shgif t a f w h tick' ds (Just newC)
+updateShgif shgif = do
+    let updateTick = set currentTick (repeat lastTimeStamp $ (shgif^.currentTick) + 1)
+    newC <- shgifToCanvas $ updateTick shgif
+    return $ set canvas (Just newC) $ updateTick shgif
     where
-        lastTimeStamp = maximum $ map fst ds
+        lastTimeStamp = maximum $ map fst (shgif^.shgifData)
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | max < val = 0
                        | otherwise = val
+
+
+-- | Update 'Shgif''s internal tick state to make it closer to given tick
+updateShgifTo :: Int -> Shgif -> IO Shgif
+updateShgifTo tick shgif  = do
+    let tickToAdd = case (shgif^.currentTick) `compare` tick of
+                        LT -> 1
+                        EQ -> 0
+                        GT -> -1
+    newC <- shgifToCanvas (shgif&currentTick-~tickToAdd)
+    return $ set canvas (Just newC) $ over currentTick (+ tickToAdd) shgif

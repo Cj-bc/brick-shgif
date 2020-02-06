@@ -9,7 +9,7 @@ module Shgif.Type (
 ) where
 
 import GHC.Generics (Generic)
-import Control.Lens (makeLenses, (.~), (^.))
+import Control.Lens (makeLenses, (.~), (^.), (&), (-~), over, set)
 import Control.Monad (when)
 import Data.HashMap.Lazy ((!))
 import qualified Data.Vector as V
@@ -198,3 +198,14 @@ updateShgif shgif@(Shgif t a f w h tick ds c) = do
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | max < val = 0
                        | otherwise = val
+
+
+-- | Update 'Shgif''s internal tick state to make it closer to given tick
+updateShgifTo :: Int -> Shgif -> IO Shgif
+updateShgifTo tick shgif  = do
+    let tickToAdd = case (shgif^.currentTick) `compare` tick of
+                        LT -> 1
+                        EQ -> 0
+                        GT -> -1
+    newC <- shgifToCanvas (shgif&currentTick-~tickToAdd)
+    return $ set canvas (Just newC) $ over currentTick (+ tickToAdd) shgif

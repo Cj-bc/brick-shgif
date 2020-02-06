@@ -6,6 +6,12 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.1.4.2] - 2020-02-04
+
+### Fixed
+- 'updateShgifTo' used wrong operator which seems to be reason of the freeze
+
+
 ## [1.1.4.1] - 2020-02-04
 
 ### Changed

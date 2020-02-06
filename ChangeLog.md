@@ -6,6 +6,14 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.1.4.0] - 2020-02-04
+
+### Added
+- 'updateShgifTo' that will update Shgif to make it closer to given tick
+
+### Fixed
+- Refactoring 'updateShgif' related functions with Lens
+
 ## [1.1.3.1] - 2019-12-22
 
 ### Fixed

@@ -5,6 +5,7 @@
 module Shgif.Type (
     Format(..), Shgif(..)
     , shgifToCanvas, updateShgifNoLoop, updateShgif, updateShgifReversedNoLoop, updateShgifReversed, getShgif, getShgifs
+    , updateShgifTo
     , canvas, width, height
 ) where
 

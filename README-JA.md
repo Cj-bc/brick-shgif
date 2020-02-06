@@ -110,7 +110,7 @@ eHandler s (AppEvent Tick) = do
 他のwidgetと同様に使うことができます。
 
 ```haskell
-ui s = [border shgif sgf]
+ui s = [border $ shgif sgf]
   where
     sgf = ... -- get Shgif data from s
 ```

@@ -29,7 +29,7 @@ $ stack install
 
 # usage
 
-1. データを`Shgif`フォーマット([docs/shgif-format.md](docs/shgif-format.md))で書きます
+1. データを`Shgif`フォーマット([docs/JA_shgif-format.md](docs/JA_shgif-format.md))で書きます
 2. `stack run <shgif-data-file>`
 
 

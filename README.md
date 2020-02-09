@@ -4,7 +4,7 @@
 # brick-shgif
 
 Implement [Cj-bc/shgif](https://github.com/Cj-bc/shgif) on [jtdaugherty/brick](https://github.com/jtdaugherty/brick)  
-The shgif **format is changed** so that doesn't support original [Cj-bc/shgif](https://github.com/Cj-bc/shgif) format.  
+The shgif __format is changed__ so that doesn't support original [Cj-bc/shgif](https://github.com/Cj-bc/shgif) format.  
 I write quick tour here, but for detailed informations how to use as library,
 please refer to haddock(you can generate haddock files by doing `stack haddock`).
 
@@ -12,6 +12,7 @@ please refer to haddock(you can generate haddock files by doing `stack haddock`)
 
 You can find some code examples under [example/codes/](example/codes/).  
 Example Shgif files are under [example/shgifs/](example/shgifs/).
+
 
 ### `stack run example/shgifs/face_blinking.yaml`
 

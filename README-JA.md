@@ -4,7 +4,7 @@ English: [README.md](README.md)
 # brick-shgif
 
 [Cj-bc/shgif](https://github.com/Cj-bc/shgif)の発想を[jtdaugherty/brick](https://github.com/jtdaugherty/brick)上で実装したモジュールです。  
-オリジナルの[Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは**違うフォーマット**を使用しています。  
+オリジナルの[Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは__違うフォーマット__を使用しています。  
 簡単な解説をここに載せますが、使い方について詳しくはhaddockを参照してください(`stack haddock`で生成できます。)
 
 # 例

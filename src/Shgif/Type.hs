@@ -76,7 +76,7 @@ parseTimeStamp = withObject "Frame" $ \f -> timeStamp
         timeStamp time ds = (time, ds)
 
 parseContents :: Value -> Parser [String]
-parseContents = withText "Contents" (return . lines . unpack)
+parseContents = withText "Contents" (return . tail . lines . unpack)
 -- }}}
 
 

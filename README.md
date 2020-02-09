@@ -103,7 +103,7 @@ main = do
 ```
 
 
-### 4. Call `updateShgif`
+### 4. Call `updateShgif` (or its variant)
 
 The function will update `Shgif`'s internal tick state, which will affect frame rendering.  
 As `updateShgif` has type `Shgif -> IO Shgif`, it can be called inside brick's `EventM` monad.
@@ -115,6 +115,25 @@ eHandler s (AppEvent Tick) = do
     newsgf <- liftIO (updateShgif oldsgf)
     continue $ ... -- continue with replacing oldsgf with newsgf
 ```
+
+There're some variants for this. Each of them let you play shgif in different way.  
+All of them has the same type `Shgif -> IO Shgif`.
+
+#### Looping and Reversing
+
+Those functions below will control looping and reversing
+
+| `function` | reversed | looped |
+|:-:|:-:|:-:|
+| `updateShgif` | No  | Yes |
+| `updateShgifNoLoop` | No  | No |
+| `updateShgifReversed` | Yes  | Yes |
+| `updateShgifReversedNoLoop` | Yes  | No |
+
+#### Control which frame to show
+
+The function `updateShgifTo` will update internal tick to make it closer to given number.  
+If internal tick is equal to the given number, it won't change anything.
 
 
 ### 5. Use `shgif` widget

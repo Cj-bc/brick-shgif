@@ -8,16 +8,24 @@ The shgif **format is changed** so that doesn't support original [Cj-bc/shgif](h
 
 # Examples
 
+You can find some code examples under [example/codes/](example/codes/).  
+Example Shgif files are under [example/shgifs/](example/shgifs/).
+
 ### `stack run example/shgifs/face_blinking.yaml`
 
 ![face-blinking.gif](docs/img/face-blinking.gif)
 
 
-# Build
+# Build & install shgif viewer
 
-
-`stack build` to build
-
+```sh
+# only build
+$ stack build
+# execute viewer without installing
+$ stack run
+# install binary `shgifViewer` to `~/.local/bin`
+$ stack install
+```
 
 # usage
 

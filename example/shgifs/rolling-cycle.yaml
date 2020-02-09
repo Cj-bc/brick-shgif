@@ -5,27 +5,32 @@ width: 3
 height: 3
 data:
   - timestamp: 0
-    contents:
-      - " * "
-      - "'  "
-      - " ` "
+    contents: |-
+              anchor
+               *
+
+               `
   - timestamp: 100
-    contents:
-      - " . "
-      - "' *"
-      - "   "
+    contents: |-
+              anchor
+                .
+               ' *
+
   - timestamp: 200
-    contents:
-      - " . "
-      - "  ,"
-      - " * "
+    contents: |-
+              anchor
+                .
+                 ,
+                *
   - timestamp: 300
-    contents:
-      - "   "
-      - "* ,"
-      - " ` "
+    contents: |-
+              anchor
+               
+               * ,
+                `
   - timestamp: 400
-    contents:
-      - " * "
-      - "'  "
-      - " ` "
+    contents: |-
+              anchor
+                *
+               '
+                `

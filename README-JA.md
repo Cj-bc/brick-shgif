@@ -4,7 +4,8 @@ English: [README.md](README.md)
 # brick-shgif
 
 [Cj-bc/shgif](https://github.com/Cj-bc/shgif)の発想を[jtdaugherty/brick](https://github.com/jtdaugherty/brick)上で実装したモジュールです。  
-オリジナルの[Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは**違うフォーマット**を使用しています。
+オリジナルの[Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは__違うフォーマット__を使用しています。  
+簡単な解説をここに載せますが、使い方について詳しくはhaddockを参照してください(`stack haddock`で生成できます。)
 
 # 例
 
@@ -28,11 +29,11 @@ $ stack install
 
 # usage
 
-1. データを`Shgif`フォーマット([docs/shgif-format.md](docs/shgif-format.md))で書きます
+1. データを`Shgif`フォーマット([docs/JA_shgif-format.md](docs/JA_shgif-format.md))で書きます
 2. `stack run <shgif-data-file>`
 
 
-# ライブラリとして使うには
+# Quick Tour: ライブラリとして使うには
 
 ## 追加されるモジュール群
 
@@ -101,7 +102,7 @@ main = do
 ```
 
 
-### 4. `updateShgif`を呼ぶ
+### 4. `updateShgif`(もしくはその亜種)を呼ぶ
 
 `updateShgif`は、フレーム描画に使用する`Shgif`内部のTickカウンターを更新します。
 `updateShgif`の型は`Shgif -> IO Shgif`なので、`EventM`モナド内から使うことができます。
@@ -113,6 +114,26 @@ eHandler s (AppEvent Tick) = do
     newsgf <- liftIO (updateShgif oldsgf)
     continue $ ... -- Shgifを新しい物に取り替えてcontinue
 ```
+
+`updateShgif`にはいくつかの亜種があります。
+それぞれ、Shgifの表示の仕方を制御することができます。  
+全て型は`Shgif -> IO Shgif`です。
+
+#### ループと反転
+
+以下の関数は、ループと反転再生を操作します。
+
+| `function` | 反転再生 | ループ |
+|:-:|:-:|:-:|
+| `updateShgif` | No  | Yes |
+| `updateShgifNoLoop` | No  | No |
+| `updateShgifReversed` | Yes  | Yes |
+| `updateShgifReversedNoLoop` | Yes  | No |
+
+#### 表示するフレームを操作する
+
+`updateShgifTo`は引数として目的のtick数を受け取り、そのtickに近づくようにshgif内部のtickを更新します。  
+もしも内部のtickと引数の数値が等しかった場合は何も更新しません。
 
 
 ### 5. `shgif` widgetを使う

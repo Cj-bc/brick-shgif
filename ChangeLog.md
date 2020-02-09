@@ -6,6 +6,19 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.1.4.3] - 2020-02-09
+
+### Added
+- New shgif viewer executable with '--reversed'/'--oneshot' flags(see its '--help')
+
+### Changed
+- All example codes are moved to [example/codes/](example/codes/) directory.
+- Update gitignore file to ignore files for 'vim'/'macOS'/'haskell'
+
+### Removed
+- Unused src/Lib.hs
+
+
 ## [1.1.4.2] - 2020-02-04
 
 ### Fixed

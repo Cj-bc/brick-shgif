@@ -18,6 +18,7 @@ import Data.Text (unpack)
 import Data.Maybe (fromMaybe)
 import Data.Either (isLeft)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
+                 , withText
                  , Parser(..), Value(..), ParseException
                  , decodeFileEither)
 import Tart.Canvas (Canvas, canvasFromText, newCanvas)
@@ -75,9 +76,7 @@ parseTimeStamp = withObject "Frame" $ \f -> timeStamp
         timeStamp time ds = (time, ds)
 
 parseContents :: Value -> Parser [String]
-parseContents = withArray "contents" $ \a -> return $ V.toList $ V.map (toStr) a
-    where
-        toStr (String a) = unpack a
+parseContents = withText "Contents" (return . lines . unpack)
 -- }}}
 
 

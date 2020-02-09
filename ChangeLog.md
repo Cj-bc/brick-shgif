@@ -6,6 +6,18 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.2.0.0] - 2020-02-09
+
+### Added
+- Notes for `updateShgif*` functions on README
+- Quick Tour to make simple shgif file on [docs/shgif-format.md](docs/shgif-format.md)
+- [docs/JA_shgif-format.md](docs/JA_shgif-format.md), Japanese version of [docs/shgif-format.md](docs/shgif-format.md)
+
+### Changed
+- New Shgif format is available! Please see [docs/shgif-format.md](docs/shgif-format.md)
+- Update all example Shgifs to support the new format
+
+
 ## [1.1.4.3] - 2020-02-09
 
 ### Added

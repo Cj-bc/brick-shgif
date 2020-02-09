@@ -4,7 +4,9 @@
 # brick-shgif
 
 Implement [Cj-bc/shgif](https://github.com/Cj-bc/shgif) on [jtdaugherty/brick](https://github.com/jtdaugherty/brick)  
-The shgif **format is changed** so that doesn't support original [Cj-bc/shgif](https://github.com/Cj-bc/shgif) format.
+The shgif **format is changed** so that doesn't support original [Cj-bc/shgif](https://github.com/Cj-bc/shgif) format.  
+I write quick tour here, but for detailed informations how to use as library,
+please refer to haddock(you can generate haddock files by doing `stack haddock`).
 
 # Examples
 
@@ -33,7 +35,7 @@ $ stack install
 2. execute `stack run <file>`
 
 
-# How to use as Library
+# Quick Tour: How to use as Library
 
 ## Modules which are exposed
 

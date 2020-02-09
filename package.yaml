@@ -34,45 +34,6 @@ dependencies:
 library:
   source-dirs: src
 
-executables:
-  shgifView:
-    main:                shgifView.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - brick-shgif
-  multipleShgifs:
-    main:                multipleGifs.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-      - brick-shgif
-  reversed:
-    main:                reversed.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-      - brick-shgif
-  compareReversed:
-    main:                compareReversed.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-      - brick-shgif
-
-
 tests:
   brick-shgif-test:
     main:                Spec.hs

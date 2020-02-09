@@ -16,11 +16,16 @@ Example Shgif files are under [example/shgifs/](example/shgifs/).
 ![face-blinking.gif](docs/img/face-blinking.gif)
 
 
-# Build
+# Build & install shgif viewer
 
-
-`stack build` to build
-
+```sh
+# only build
+$ stack build
+# execute viewer without installing
+$ stack run
+# install binary `shgifViewer` to `~/.local/bin`
+$ stack install
+```
 
 # usage
 

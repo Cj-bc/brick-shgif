@@ -15,9 +15,16 @@ Shgifのサンプルは[example/shgifs/](example/shgifs/)以下にあります�
 
 ![face-blinking.gif](docs/img/face-blinking.gif)
 
-# Build
+# shgifViewerのビルドとインストール
 
-`stack build`
+```sh
+# ビルドのみ
+$ stack build
+# インストールせずにviewerを使う
+$ stack run
+# `shgifViewer`バイナリーを`~/.local/bin`にインストールする
+$ stack install
+```
 
 # usage
 

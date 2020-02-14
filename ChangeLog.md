@@ -6,6 +6,15 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.3.0.0] - 2020-02-14
+
+### Added
+- 'Brick.Extensions.Shgif.Widgets.shgifs' which will take multiple shgifs and display with merging.
+
+### Changed
+- 'Brick.Extensions.Shgif.Widgets.canvas' takes [Canvas] instead of Canvas.
+
+
 ## [1.2.0.0] - 2020-02-09
 
 ### Added

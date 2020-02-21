@@ -6,6 +6,7 @@ module Shgif.Type (
     Format(..), Shgif(..)
     , shgifToCanvas, updateShgifNoLoop, updateShgif, updateShgifReversedNoLoop, updateShgifReversed, getShgif, getShgifs
     , updateShgifTo
+    , fromCanvas
     , canvas, width, height
 ) where
 
@@ -21,7 +22,8 @@ import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , withText
                  , Parser(..), Value(..), ParseException
                  , decodeFileEither)
-import Tart.Canvas (Canvas, canvasFromText, newCanvas)
+import Tart.Canvas (Canvas, canvasFromText, newCanvas, canvasSize, prettyPrintCanvas)
+import Control.Arrow (second)
 
 -- | Format  of shgif file
 --
@@ -136,6 +138,16 @@ getShgifs xs = do
     fromRight (Right a) = a
     caughtExceptions rs = map fromLeft $ filter isLeft rs
 
+fromCanvas :: [(Int, Canvas)] -> Shgif
+fromCanvas = fromCanvasWithMeta "" ""
+
+fromCanvasWithMeta :: String -> String -> [(Int, Canvas)] -> Shgif
+fromCanvasWithMeta title author timestamps = Shgif title author Page w h 0 convertedData Nothing
+  where
+    (w, h) = foldr1 (\(x,y ) (x', y') -> (max x x', max y y')) whList
+    whList = fmap (canvasSize . snd) timestamps
+    convertedData :: [TimeStamp]
+    convertedData = fmap (second $ lines . prettyPrintCanvas False . pure) timestamps
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.
 --

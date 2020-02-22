@@ -25,6 +25,10 @@ import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
 import Tart.Canvas (Canvas, canvasFromText, newCanvas, canvasSize, prettyPrintCanvas)
 import Control.Arrow (second)
 
+-- Config {{{
+defaultTimeStampInterval = 100
+--- }}}
+
 -- | Format  of shgif file
 --
 -- Currently only Page is suported
@@ -138,16 +142,39 @@ getShgifs xs = do
     fromRight (Right a) = a
     caughtExceptions rs = map fromLeft $ filter isLeft rs
 
-fromCanvas :: [(Int, Canvas)] -> Shgif
-fromCanvas = fromCanvasWithMeta "" ""
 
-fromCanvasWithMeta :: String -> String -> [(Int, Canvas)] -> Shgif
-fromCanvasWithMeta title author timestamps = Shgif title author Page w h 0 convertedData Nothing
+-- | Create 'Shgif' from 'Tart.Canvas.Canvas'es without any meta value
+--
+-- If you can implement meta values, use 'fromCanvasWithMeta' instead.
+--
+-- The first argument specify the tick for each frame.
+--
+-- If 'Nothing', use 'defaultTimeStampInterval'
+fromCanvas :: Maybe [Int] -> [Canvas] -> Shgif
+fromCanvas Nothing cs = fromCanvasWithMeta "" "" defaultTimestamps cs
+    where
+        defaultTimestamps = take (length cs) $ 0: interval defaultTimeStampInterval
+        interval i = i: interval (2*i)
+fromCanvas (Just ts)  cs = fromCanvasWithMeta "" "" ts cs
+
+
+-- | Create 'Shgif' from 'Tart.Canvas.Canvas' with meta value
+--
+-- This only support 'Page' format, because 'Tart.Canvas.Canvas' is Bitmap image.
+--
+-- Make sure to __duplicate the last Canvas__ so that it'll show up for more than 1 tick.
+--
+-- (If you don't, The last frame only appear for 1 tick. In most case, it's the same as invisible)
+fromCanvasWithMeta :: String -> String -> [Int] -> [Canvas] -> Shgif
+fromCanvasWithMeta title author timestamps cs = Shgif title author Page w h 0 convertedData Nothing
   where
     (w, h) = foldr1 (\(x,y ) (x', y') -> (max x x', max y y')) whList
-    whList = fmap (canvasSize . snd) timestamps
+    whList = fmap (canvasSize) cs
     convertedData :: [TimeStamp]
-    convertedData = fmap (second $ lines . prettyPrintCanvas False . pure) timestamps
+    convertedData = zip timestamps $ fmap (lines . prettyPrintCanvas False . pure) cs
+    -- convertedData = zip timestamps $ fmap (lines . prettyPrintCanvas False . pure) canvasWithLastFrame
+    canvasWithLastFrame = cs ++ [last cs]
+
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.
 --

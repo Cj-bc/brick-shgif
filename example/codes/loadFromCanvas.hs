@@ -7,7 +7,7 @@ import Brick.Extensions.Shgif.Events
 import Control.Monad (void)
 import Control.Monad.IO.Class (liftIO)
 import Tart.Format (readTartFile, sortedCanvases, TartFile(..), toTartFilepath)
-import Shgif.Type (fromCanvas, Shgif, updateShgif)
+import Shgif.Type (fromTartFile, Shgif, updateShgif)
 import qualified Graphics.Vty as Vty
 
 type AppState = Shgif
@@ -31,7 +31,4 @@ main = do
     tartfile <- readTartFile $ toTartFilepath "../resources/tart/number.tart"
     case tartfile of
         Left e  -> putStrLn e
-        Right t -> do
-            let cs  = sortedCanvases (tartFileCanvasOrder t) (tartFileCanvasList t)
-                sgf = fromCanvas Nothing $ cs ++ [last cs]
-            void $ mainWithTick Nothing 1000 app sgf
+        Right t -> void $ mainWithTick Nothing 1000 app (fromTartFile Nothing t)

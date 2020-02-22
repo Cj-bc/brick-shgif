@@ -7,6 +7,7 @@ module Shgif.Type (
     , shgifToCanvas, updateShgifNoLoop, updateShgif, updateShgifReversedNoLoop, updateShgifReversed, getShgif, getShgifs
     , updateShgifTo
     , fromCanvas
+    , fromTartFile
     , canvas, width, height
 ) where
 
@@ -23,6 +24,8 @@ import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , Parser(..), Value(..), ParseException
                  , decodeFileEither)
 import Tart.Canvas (Canvas, canvasFromText, newCanvas, canvasSize, prettyPrintCanvas)
+import Tart.Format (TartFile, sortedCanvases, tartFileCanvasOrder, tartFileCanvasList)
+
 import Control.Arrow (second)
 
 -- Config {{{
@@ -156,6 +159,11 @@ fromCanvas Nothing cs = fromCanvasWithMeta "" "" defaultTimestamps cs
     where
         defaultTimestamps = take (length cs) $ 0: interval 0 defaultTimeStampInterval
         interval orig i = orig + i: interval (orig + i) i
+
+-- | Create 'Shgif' from 'Tart.Format.TartFile'
+fromTartFile :: Maybe [Int] -> TartFile -> Shgif
+fromTartFile ix tartFile = let cs  = sortedCanvases (tartFileCanvasOrder tartFile) (tartFileCanvasList tartFile)
+                           in        fromCanvas Nothing $ cs ++ [last cs]
 
 
 -- | Create 'Shgif' from 'Tart.Canvas.Canvas' with meta value

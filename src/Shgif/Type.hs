@@ -151,17 +151,18 @@ getShgifs xs = do
 --
 -- If 'Nothing', use 'defaultTimeStampInterval'
 fromCanvas :: Maybe [Int] -> [Canvas] -> Shgif
+fromCanvas (Just ts)  cs = fromCanvasWithMeta "" "" ts cs
 fromCanvas Nothing cs = fromCanvasWithMeta "" "" defaultTimestamps cs
     where
         defaultTimestamps = take (length cs) $ 0: interval 0 defaultTimeStampInterval
         interval orig i = orig + i: interval (orig + i) i
-fromCanvas (Just ts)  cs = fromCanvasWithMeta "" "" ts cs
 
 
 -- | Create 'Shgif' from 'Tart.Canvas.Canvas' with meta value
 --
 -- This only support 'Page' format, because 'Tart.Canvas.Canvas' is Bitmap image.
 --
+-- For __Not__ 'updateShgifTo' use cases:
 -- Make sure to __duplicate the last Canvas__ so that it'll show up for more than 1 tick.
 --
 -- (If you don't, The last frame only appear for 1 tick. In most case, it's the same as invisible)
@@ -172,8 +173,6 @@ fromCanvasWithMeta title author timestamps cs = Shgif title author Page w h 0 co
     whList = fmap (canvasSize) cs
     convertedData :: [TimeStamp]
     convertedData = zip timestamps $ fmap (lines . prettyPrintCanvas False . pure) cs
-    -- convertedData = zip timestamps $ fmap (lines . prettyPrintCanvas False . pure) canvasWithLastFrame
-    canvasWithLastFrame = cs ++ [last cs]
 
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.

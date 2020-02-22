@@ -153,8 +153,8 @@ getShgifs xs = do
 fromCanvas :: Maybe [Int] -> [Canvas] -> Shgif
 fromCanvas Nothing cs = fromCanvasWithMeta "" "" defaultTimestamps cs
     where
-        defaultTimestamps = take (length cs) $ 0: interval defaultTimeStampInterval
-        interval i = i: interval (2*i)
+        defaultTimestamps = take (length cs) $ 0: interval 0 defaultTimeStampInterval
+        interval orig i = orig + i: interval (orig + i) i
 fromCanvas (Just ts)  cs = fromCanvasWithMeta "" "" ts cs
 
 

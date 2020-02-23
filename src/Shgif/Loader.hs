@@ -1,3 +1,16 @@
+{-|
+Module      : Shgif.Loader
+Description : Collection of Loaders for Shgif
+Copyright   : (c) Cj.bc_sd a.k.a Cj-bc, 2020
+Maintainer  : cj.bc-sd@outlook.jp
+Stability   : experimental
+
+This module provides __Loader__s for Shgif.
+
+'Loader' is a function that'll load Shgif from Specified files/Values.
+
+As Those are just function, no type-class-ish thing is provided.
+-}
 module Shgif.Loader (
     -- * from original format
       getShgif

@@ -1,6 +1,17 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# OPTIONS_HADDOCK hide #-}
+{-|
+Module      : Shgif.Type.Internal
+Description : some Type definitnions for Internal use export
+Copyright   : (c) Cj.bc_sd a.k.a Cj-bc, 2020
+Maintainer  : cj.bc-sd@outlook.jp
+Stability   : experimental
+
+This module aims to hide some 'Only internal use' functions (like Lens)
+from 'Shgif.Type'.
+-}
 module Shgif.Type.Internal where
 import Control.Lens (makeLenses, (.~), (^.), (&), (+~))
 
@@ -25,6 +36,7 @@ data Format = Page -- ^ list data as list of String
             | Plot -- ^ list data based on its coordinate
             deriving (Generic, Show)
 
+-- | TimeStamp is used to represent one _frame_
 type TimeStamp = (Int, [String])
 
 -- | The main datatype that holds Shgif data

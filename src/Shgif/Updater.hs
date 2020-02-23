@@ -5,7 +5,11 @@ Copyright   : (c) Cj.bc_sd a.k.a Cj-bc, 2020
 Maintainer  : cj.bc-sd@outlook.jp
 Stability   : experimental
 
-This module provides lots kind of updater.
+This module provides lots kind of __updater__.
+
+'Updater' is a function that'll update Shgif's internal tick-rate.
+
+Each Updater has different update method.
 -}
 module Shgif.Updater (
       updateShgifNoLoop

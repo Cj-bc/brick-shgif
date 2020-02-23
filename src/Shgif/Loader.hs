@@ -13,8 +13,8 @@ As Those are just function, no type-class-ish thing is provided.
 -}
 module Shgif.Loader (
     -- * from original format
-      getShgif
-    , getShgifs
+      fromFile
+    , fromFiles
 
     -- * 'Tart' related
     , fromCanvas
@@ -34,9 +34,9 @@ defaultTimeStampInterval = 100
 
 
 
--- | Get 'Shgif' data from Yaml file
-getShgif :: FilePath -> IO (Either ParseException Shgif)
-getShgif n = do
+-- | Load 'Shgif' data from Yaml file
+fromFile :: FilePath -> IO (Either ParseException Shgif)
+fromFile n = do
     sgf <- (decodeFileEither n :: IO (Either ParseException Shgif))
     case sgf of
       Left e -> return $ Left e
@@ -45,10 +45,10 @@ getShgif n = do
         return $ Right sgf'
 
 
--- | Get list of 'Shgif's from list of Yaml file
-getShgifs :: [FilePath] -> IO (Either [ParseException] [Shgif])
-getShgifs xs = do
-  results <- sequence $ map getShgif xs :: IO [Either ParseException Shgif]
+-- | Load list of 'Shgif's from list of Yaml file
+fromFiles :: [FilePath] -> IO (Either [ParseException] [Shgif])
+fromFiles xs = do
+  results <- sequence $ map fromFile xs :: IO [Either ParseException Shgif]
   if (containsLeft results)
     then return $ Left  $ caughtExceptions results
     else return $ Right $ map fromRight results

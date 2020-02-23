@@ -6,6 +6,15 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.3.1.0] - 2020-02-23
+
+### Added
+- 'Shgif.Type.fromCanvas'
+- 'Shgif.Type.fromTartFile'
+- New example using fromTartFile: 'example/codes/loadFromTartFile.hs'
+- Resource for above example in: 'example/resources'
+
+
 ## [1.3.0.0] - 2020-02-14
 
 ### Added

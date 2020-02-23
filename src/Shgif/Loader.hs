@@ -5,6 +5,7 @@ module Shgif.Loader (
 
     -- * 'Tart' related
     , fromCanvas
+    , fromCanvasWithMeta
     , fromTartFile
 ) where
 import Control.Lens ((&), (+~), (^.))

@@ -11,7 +11,9 @@ import Brick
 import Brick.Widgets.Border (border)
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
 import Brick.Extensions.Shgif.Widgets (shgif)
-import Shgif.Type (Shgif(..), updateShgif, updateShgifReversed, getShgif)
+import Shgif.Type (Shgif(..))
+import Shgif.Loader (fromFile)
+import Shgif.Updater (updateShgif, updateShgifReversed)
 
 type AppState = (Shgif, Shgif)
 data Name = NoName deriving (Eq, Ord)
@@ -42,8 +44,8 @@ main = do
     when (args == []) $ putStrLn "usage: compareReversed <shgif-filename>" >> exitSuccess
 
     -- Read Shgif data from File
-    sgf <- getShgif $ head args
-    sgfRev <- getShgif $ head args
+    sgf <- fromFile $ head args
+    sgfRev <- fromFile $ head args
 
     -- Check if reading data is done correctly
     let fromLeft  (Left e)  = e

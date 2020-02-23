@@ -1,3 +1,12 @@
+{-|
+Module      : Brick.Extensions.Shgif.Events
+Description : Brick extension for "Shgif"
+Copyright   : (c) Cj.bc_sd a.k.a Cj-bc, 2020
+Maintainer  : cj.bc-sd@outlook.jp
+Stability   : experimental
+
+This module provides "Shgif" extension for "Brick".
+-}
 module Brick.Extensions.Shgif.Events where
 
 import Data.Maybe (fromMaybe)

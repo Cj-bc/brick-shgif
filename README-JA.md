@@ -4,8 +4,8 @@ English: [README.md](README.md)
 # brick-shgif
 
 [Cj-bc/shgif](https://github.com/Cj-bc/shgif)の発想を[jtdaugherty/brick](https://github.com/jtdaugherty/brick)上で実装したモジュールです。  
-オリジナルの[Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは__違うフォーマット__を使用しています。  
-簡単な解説をここに載せますが、使い方について詳しくはhaddockを参照してください(`stack haddock`で生成できます。)
+オリジナルの[Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは __違うフォーマット__ を使用しています。  
+全体の流れをここに載せますが、それぞれの使い方について詳しくはhaddockを参照してください(`stack haddock`で生成できます。)
 
 # 例
 
@@ -47,30 +47,34 @@ Brick:
       - Widgets
 Shgif:
   - Type
+  - Loader
+  - Updater
 ```
+
+``
 
 ## 自分のAppで`shgif`ウィジェットを使う
 
 `shgif`ウィジェットを使うには、以下の手順が必要です:
 
-1. `Data.Yaml.decode*`を使ってshgifファイルを読み、`Shgif`型のデータを生成する
+1.  __Loader__ を使って`Shgif`のデータを読み込みます
 2. 一定時間毎に呼ばれるEvent(Tick)を作成する(特に何も使っていない場合、`TickEvent`が使用できます)
 3. (もし`TickEvent`を使うならば) `App s e n`の`e`を`TickEvent`にする
-4. `2.`で設定したイベントが呼ばれたときに`updateShgif`を`Shgif`データに適用する(これでshgifのtickを増やします)
+4. `2.`で設定したイベントが呼ばれたときに __Updater__ を`Shgif`データに適用する(これで`Shgif`のtickを操作します)
 5. 描画部分で、`shgif` widgetに`Shgif`データを渡す
 
 
-### 1. shgifファイルを読む
+### 1. `Loader`を使ってshgifファイルを読む
 
-始めに、`Shgif`型のデータをファイルから読み込む必要があります。  
-`decodeFileEither`や`decodeFileThrow`などの`Data.Yaml`のデコーダーを使ってください。  
-個人的には`decodeFileEither`を使用しています。  
+始めに、`Shgif`型のデータをファイルや他のデータ型から読み込む必要があります。  
+`Shgif.Loader`モジュールに様々な`Loader`があります。
 
 ```haskell
-import Data.Yaml (decodeFileEither, ParseException)
+import Data.Yaml (ParseException)
+import Shgif.Loader (fromFile)
 
 main = do
-  sgf <- decodeFileEither "filename" :: IO (Either ParseException Shgif)
+  sgf <- fromFile "filename" :: IO (Either ParseException Shgif)
 ```
 
 
@@ -102,10 +106,10 @@ main = do
 ```
 
 
-### 4. `updateShgif`(もしくはその亜種)を呼ぶ
+### 4.  __Updater__ を呼ぶ
 
-`updateShgif`は、フレーム描画に使用する`Shgif`内部のTickカウンターを更新します。
-`updateShgif`の型は`Shgif -> IO Shgif`なので、`EventM`モナド内から使うことができます。
+`Shgif.Updater`内にある __Updater__ は、フレーム描画に使用する`Shgif`内部のTickカウンターを更新します。  
+型は`Shgif -> IO Shgif`なので、`EventM`モナド内から使うことができます。
 
 ```haskell
 -- eHandler is used `appHandleEvent` for `App`
@@ -114,10 +118,6 @@ eHandler s (AppEvent Tick) = do
     newsgf <- liftIO (updateShgif oldsgf)
     continue $ ... -- Shgifを新しい物に取り替えてcontinue
 ```
-
-`updateShgif`にはいくつかの亜種があります。
-それぞれ、Shgifの表示の仕方を制御することができます。  
-全て型は`Shgif -> IO Shgif`です。
 
 #### ループと反転
 
@@ -138,6 +138,7 @@ eHandler s (AppEvent Tick) = do
 
 ### 5. `shgif` widgetを使う
 
+`Brick.Extensions.Widget.Shgif`にあります。
 他のwidgetと同様に使うことができます。
 
 ```haskell

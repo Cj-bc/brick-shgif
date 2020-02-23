@@ -12,10 +12,15 @@ This module provides lots kind of __updater__.
 Each Updater has different update method.
 -}
 module Shgif.Updater (
-      updateShgifNoLoop
-    , updateShgif
-    , updateShgifReversedNoLoop
+    -- * Normal
+      updateShgif
+
+    -- With loop/reversed setting
+    , updateShgifNoLoop
     , updateShgifReversed
+    , updateShgifReversedNoLoop
+
+    -- * Flexible changing
     , updateShgifTo
 ) where
 import Shgif.Type.Internal

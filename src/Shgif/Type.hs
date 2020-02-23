@@ -11,11 +11,16 @@ Stability   : experimental
 This module provides common Types for Shgif.
 -}
 module Shgif.Type (
+    -- * Types
     Format(..)
     , Shgif(..)
     , TimeStamp
+
+    -- * Small functions for Shgif
     , shgifToCanvas
-    , canvas, width, height
+    , canvas
+    , width
+    , height
 ) where
 
 import Shgif.Type.Internal

@@ -7,7 +7,15 @@ Stability   : experimental
 
 This module provides "Brick"'s widget for "Shgif" data.
 -}
-module Brick.Extensions.Shgif.Widgets where
+module Brick.Extensions.Shgif.Widgets
+(
+-- * Widget for Shgif
+  shgif
+, shgifs
+
+-- * other
+, canvas
+) where
 
 import Control.Lens ((^.), view)
 import Data.Maybe (fromJust, isNothing)

@@ -10,7 +10,9 @@ import qualified Graphics.Vty as Vty
 import Brick
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
 import Brick.Extensions.Shgif.Widgets (shgif)
-import Shgif.Type (Shgif(..), updateShgif, getShgif)
+import Shgif.Type (Shgif(..))
+import Shgif.Updater (updateShgif)
+import Shgif.Loader (fromFile)
 
 type AppState = Shgif
 data Name = NoName deriving (Eq, Ord)
@@ -37,7 +39,7 @@ main = do
     when (args == []) $ putStrLn "usage: shgifView <shgif-filename>" >> exitSuccess
 
     -- Read Shgif data from File
-    sgf <- getShgif $ head args
+    sgf <- fromFile $ head args
 
     let fromLeft  (Left e)  = e
         fromRight (Right a) = a

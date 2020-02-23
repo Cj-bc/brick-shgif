@@ -7,7 +7,9 @@ import Brick.Extensions.Shgif.Events
 import Control.Monad (void)
 import Control.Monad.IO.Class (liftIO)
 import Tart.Format (readTartFile, sortedCanvases, TartFile(..), toTartFilepath)
-import Shgif.Type (fromTartFile, Shgif, updateShgif)
+import Shgif.Type (Shgif)
+import Shgif.Updater (updateShgif)
+import Shgif.Loader (fromTartFile)
 import qualified Graphics.Vty as Vty
 
 type AppState = Shgif

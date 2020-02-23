@@ -4,7 +4,7 @@ English: [README.md](README.md)
 # brick-shgif
 
 [Cj-bc/shgif](https://github.com/Cj-bc/shgif)の発想を[jtdaugherty/brick](https://github.com/jtdaugherty/brick)上で実装したモジュールです。  
-オリジナルの[Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは__違うフォーマット__を使用しています。  
+オリジナルの[Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは __違うフォーマット__ を使用しています。  
 全体の流れをここに載せますが、それぞれの使い方について詳しくはhaddockを参照してください(`stack haddock`で生成できます。)
 
 # 例
@@ -57,10 +57,10 @@ Shgif:
 
 `shgif`ウィジェットを使うには、以下の手順が必要です:
 
-1. __Loader__を使って`Shgif`のデータを読み込みます
+1.  __Loader__ を使って`Shgif`のデータを読み込みます
 2. 一定時間毎に呼ばれるEvent(Tick)を作成する(特に何も使っていない場合、`TickEvent`が使用できます)
 3. (もし`TickEvent`を使うならば) `App s e n`の`e`を`TickEvent`にする
-4. `2.`で設定したイベントが呼ばれたときに__Updater__を`Shgif`データに適用する(これで`Shgif`のtickを操作します)
+4. `2.`で設定したイベントが呼ばれたときに __Updater__ を`Shgif`データに適用する(これで`Shgif`のtickを操作します)
 5. 描画部分で、`shgif` widgetに`Shgif`データを渡す
 
 
@@ -106,9 +106,9 @@ main = do
 ```
 
 
-### 4. __Updater__を呼ぶ
+### 4.  __Updater__ を呼ぶ
 
-`Shgif.Updater`内にある__Updater__は、フレーム描画に使用する`Shgif`内部のTickカウンターを更新します。  
+`Shgif.Updater`内にある __Updater__ は、フレーム描画に使用する`Shgif`内部のTickカウンターを更新します。  
 型は`Shgif -> IO Shgif`なので、`EventM`モナド内から使うことができます。
 
 ```haskell

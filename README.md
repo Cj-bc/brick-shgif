@@ -50,6 +50,8 @@ Brick:
       - Widgets
 Shgif:
   - Type
+  - Loader
+  - Updater
 ```
 
 ## Use shgif widget in your Brick app

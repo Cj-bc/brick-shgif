@@ -47,7 +47,11 @@ Brick:
       - Widgets
 Shgif:
   - Type
+  - Loader
+  - Updater
 ```
+
+``
 
 ## 自分のAppで`shgif`ウィジェットを使う
 

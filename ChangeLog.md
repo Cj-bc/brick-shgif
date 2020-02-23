@@ -6,6 +6,32 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.4.0.0] - 2020-02-23
+
+### Added
+- New module: 'Shgif.Loader'
+- New module: 'Shgif.Updater'
+- New module: 'Shgif.Type.Internal'
+- New module: 'Shgif'
+  - This is for document reason. Doesn't export anything.
+
+### Changed
+- Rename 'getShgif' to 'fromFile'
+- Rename 'getShgifs'to 'fromFiles'
+- 'fromCanvasWithMeta' is exported from 'Shgif.Loader'
+- 'Shgif.Type' doesn't export:
+  - updateShgifNoLoop
+  - updateShgif
+  - updateShgifReversedNoLoop
+  - updateShgifReversed
+  - getShgif
+  - getShgifs
+  - updateShgifTo
+  - fromCanvas
+  - fromTartFile
+- Update documents
+
+
 ## [1.3.1.0] - 2020-02-23
 
 ### Added

@@ -10,11 +10,14 @@ import qualified Graphics.Vty as Vty
 import Brick
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
 import Brick.Extensions.Shgif.Widgets (shgif)
-import Shgif.Type (Shgif(..), updateShgif, getShgif,
-                   updateShgifReversed, updateShgifNoLoop
-                  ,updateShgifReversedNoLoop
-                  ,updateShgifNoLoop
-                  )
+import Shgif.Type (Shgif(..))
+import Shgif.Loader (getShgif)
+import Shgif.Updater ( updateShgif
+                     , updateShgifReversed
+                     , updateShgifNoLoop
+                     , updateShgifReversedNoLoop
+                     , updateShgifNoLoop
+                     )
 import Options.Applicative
 
 type AppState = (Shgif, (Shgif -> IO Shgif))

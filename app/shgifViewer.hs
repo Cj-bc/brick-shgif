@@ -10,11 +10,14 @@ import qualified Graphics.Vty as Vty
 import Brick
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
 import Brick.Extensions.Shgif.Widgets (shgif)
-import Shgif.Type (Shgif(..), updateShgif, getShgif,
-                   updateShgifReversed, updateShgifNoLoop
-                  ,updateShgifReversedNoLoop
-                  ,updateShgifNoLoop
-                  )
+import Shgif.Type (Shgif(..))
+import Shgif.Loader (fromFile)
+import Shgif.Updater ( updateShgif
+                     , updateShgifReversed
+                     , updateShgifNoLoop
+                     , updateShgifReversedNoLoop
+                     , updateShgifNoLoop
+                     )
 import Options.Applicative
 
 type AppState = (Shgif, (Shgif -> IO Shgif))
@@ -65,7 +68,7 @@ main = do
                 (AppFlags False True)  -> updateShgifReversed
 
     -- Read Shgif data from File
-    sgf <- getShgif $ filename
+    sgf <- fromFile $ filename
 
     let fromLeft  (Left e)  = e
         fromRight (Right a) = a

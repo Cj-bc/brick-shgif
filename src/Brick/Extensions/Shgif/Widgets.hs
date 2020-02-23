@@ -1,3 +1,12 @@
+{-|
+Module      : Brick.Extensions.Shgif.Widgets
+Description : Brick extension for "Shgif"
+Copyright   : (c) Cj.bc_sd a.k.a Cj-bc, 2020
+Maintainer  : cj.bc-sd@outlook.jp
+Stability   : experimental
+
+This module provides "Brick"'s widget for "Shgif" data.
+-}
 module Brick.Extensions.Shgif.Widgets where
 
 import Control.Lens ((^.), view)
@@ -12,7 +21,7 @@ import Tart.Canvas (Canvas(..), canvasLayersToImage)
 
 -- | Widget to show 'Shgif' file
 shgif :: Shgif -> Widget n
-shgif s | isNothing (s^.T.canvas) = raw $ Vty.charFill Vty.defAttr ' ' (s^.T.width) (s^.T.height) -- Is order correct? (width, height) ?
+shgif s | isNothing (s^.T.canvas) = raw $ Vty.charFill Vty.defAttr ' ' (s^.T.width) (s^.T.height)
         | otherwise               = canvas [fromJust $ s^.T.canvas]
 
 

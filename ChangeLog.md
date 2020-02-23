@@ -6,6 +6,12 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.4.0.1] - 2020-02-23
+
+### Fixed
+- Example codes use new module names
+
+
 ## [1.4.0.0] - 2020-02-23
 
 ### Added

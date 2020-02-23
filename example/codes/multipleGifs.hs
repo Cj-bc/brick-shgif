@@ -12,7 +12,9 @@ import Brick.Widgets.Core ((<+>))
 import Brick.Widgets.Border (border)
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
 import Brick.Extensions.Shgif.Widgets (shgif)
-import Shgif.Type (Shgif(..), updateShgif, getShgifs)
+import Shgif.Type (Shgif(..))
+import Shgif.Updater (updateShgif)
+import Shgif.Loader (fromFiles)
 
 type AppState = [Shgif]
 data Name = NoName deriving (Eq, Ord)
@@ -39,7 +41,7 @@ main = do
     when (null args) $ putStrLn "usage: multipleGifs <shgif-filename> [<shgif-filename>...]" >> exitSuccess
 
     -- Read Shgif data from File
-    sgf <- getShgifs args :: IO (Either [ParseException] [Shgif])
+    sgf <- fromFiles args :: IO (Either [ParseException] [Shgif])
 
     let fromLeft (Left c) = c
     when (isLeft sgf) $ putStrLn (unlines $ map show (fromLeft sgf)) >> exitFailure

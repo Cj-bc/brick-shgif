@@ -24,7 +24,7 @@ module Shgif.Updater (
     , updateShgifTo
 ) where
 import Shgif.Type.Internal
-import Control.Lens (over, set, (+~), (&), (^.))
+import Control.Lens (over, set, (+~), (&), (^.), (.~))
 
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.
@@ -103,3 +103,12 @@ updateShgifTo tick shgif  = do
                         GT -> -1
     newC <- shgifToCanvas (shgif&currentTick+~tickToAdd)
     return $ set canvas (Just newC) $ over currentTick (+ tickToAdd) shgif
+
+
+-- | Set 'Shgif''s internal tick state to given tick.
+setShgifTickTo :: Int -> Shgif -> IO Shgif
+setShgifTickTo tick shgif = do
+    newC <- shgifToCanvas $ shgif&currentTick.~tick
+    return . set canvas (Just newC)
+           . set currentTick tick
+           $ shgif

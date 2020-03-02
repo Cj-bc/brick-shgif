@@ -22,6 +22,7 @@ module Shgif.Updater (
 
     -- * Flexible changing
     , updateShgifTo
+    , setShgifTickTo
 ) where
 import Shgif.Type.Internal
 import Control.Lens (over, set, (+~), (&), (^.), (.~))

@@ -1,0 +1,51 @@
+title: ten panels
+author: Cj.bc_sd a.k.a cj-bc
+format: Page
+width: 8
+height: 1
+data:
+  - timestamp: 0
+    contents: |-
+      a
+      0 panel!
+  - timestamp: 1
+    contents: |-
+      a
+      1 panel!
+  - timestamp: 2
+    contents: |-
+      a
+      2 panel!
+  - timestamp: 3
+    contents: |-
+      a
+      3 panel!
+  - timestamp: 3
+    contents: |-
+      a
+      3 panel!
+  - timestamp: 4
+    contents: |-
+      a
+      4 panel!
+  - timestamp: 5
+    contents: |-
+      a
+      5 panel!
+  - timestamp: 6
+    contents: |-
+      a
+      6 panel!
+  - timestamp: 7
+    contents: |-
+      a
+      7 panel!
+  - timestamp: 8
+    contents: |-
+      a
+      8 panel!
+  - timestamp: 9
+    contents: |-
+      a
+      9 panel!
+

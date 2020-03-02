@@ -6,6 +6,12 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.4.1.0] - 2020-03-02
+
+### Added
+- New Updater: 'setShgifTickTo'
+- Example for 'setShgifTickTo'
+
 ## [1.4.0.1] - 2020-02-23
 
 ### Fixed

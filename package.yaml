@@ -45,6 +45,8 @@ executables:
     dependencies:
     - brick-shgif
     - optparse-applicative
+    - fsnotify
+    - filepath
 
 tests:
   brick-shgif-test:

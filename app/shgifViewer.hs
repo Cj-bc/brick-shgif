@@ -26,6 +26,7 @@ data Name = NoName deriving (Eq, Ord)
 -- Options {{{
 data AppFlags = AppFlags { oneShot :: Bool
                          , reversed :: Bool
+                         , speed :: Int
                          }
 
 revSwitch = flag True False
@@ -35,6 +36,7 @@ appFlags = (,) <$> apf <*> filename
     where
         apf = AppFlags <$> switch (long "oneShot" <> help "play shgif only once (no loop)")
                        <*> switch (long "reversed" <> short 'r' <> help "play shgif backward")
+                       <*> option auto (long "speed" <> value 1000 <> help "Speed to play in [micro second] (default: 1000)")
         filename = argument Options.Applicative.str (metavar "FILE")
 
 optionInfo :: ParserInfo (AppFlags, String)
@@ -66,8 +68,8 @@ main = do
                 (AppFlags True True)   -> updateShgifReversedNoLoop
                 (AppFlags False False) -> updateShgif
                 (AppFlags False True)  -> updateShgifReversed
-
-    -- Read Shgif data from File
+        AppFlags _ _ speed = flag
+    -- Read Shgif data from File {{{1
     sgf <- fromFile $ filename
 
     let fromLeft  (Left e)  = e
@@ -75,6 +77,7 @@ main = do
     when (isLeft sgf) $ putStrLn ( show $ fromLeft sgf) >> exitFailure
     let (Right sgf') = sgf
 
-    let ms = 1000
-    finalState <- mainWithTick Nothing ms app (sgf', f)
+
+    finalState <- mainWithTick Nothing speed app (sgf', f)
     return ()
+

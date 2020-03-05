@@ -1,5 +1,20 @@
 # Shgif format definition
 
+## Current version
+
+This document define Shgif format `1.0.0`
+
+## About versioning
+
+Using [Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html)
+
+## About format version used in the library
+
+I try to implement the latest format.
+`Shgif.Type.Internal.version` specify which version is it.
+
+---
+
 Shgif data is written in YAML.
 Different format from original([Cj-bc/shgif](https://github.com/Cj-bc/shgif))
 
@@ -11,6 +26,7 @@ author: Author of the shgif
 format: Page # Currently only 'Page' work
 width: 20 # width of your shgif
 height: 3 # height of your shgif
+version: 1.0.0 # shgif format version
 data: # list of shgif frame
   - timestamp: 0 # timestamp should be start from 0
     # The first line of 'contents' is __anchor__
@@ -116,6 +132,7 @@ Required metadata are:
 | format | Shgif format. _Currently only 'Page' is available_ |
 | width  | width of this Shgif |
 | height | height of this Shgif |
+| version | version number you use |
 
 
 ### 3. Define Timestamp
@@ -138,6 +155,7 @@ author: <author-name>
 format: Page
 width: <width-of-Shgif>
 height: <height-of-Shgif>
+version: <version-number>
 data:
   - timestamp: 0
     contents: |-

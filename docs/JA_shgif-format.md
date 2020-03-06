@@ -1,5 +1,19 @@
 # Shgif フォーマット仕様
 
+## 仕様書のバージョン
+
+この仕様書で定義されているのは`1.0.0`です
+
+## バージョニングについて
+
+[Semantic versioning v2.0.0](https://semver.org/spec/v2.0.0.html)を使用しています。
+
+## ライブラリ実装のバージョンについて
+
+できる限り最新のバージョンが実装されますが、実際に実装されているバージョンは`Shgif.Type.Internal.version`で確認できます。
+
+---
+
 ShgifのデータはYAMLで保存されます。  
 [Cj-bc/shgif](https://github.com/Cj-bc/shgif)とは全く別のフォーマットです。
 
@@ -11,6 +25,7 @@ author: shgifの著作者
 format: Page # 現在は'Page'のみ
 width: 20 # shgifの横幅
 height: 3 # shgifの高さ
+version: 1.0.0 # shgif formatバージョン
 data: # shgifフレームのリスト
   - timestamp: 0 # timestampは0から開始する必要があります。
     # 'contents'の一行目は__アンカー__です。
@@ -118,6 +133,7 @@ data: # shgifフレームのリスト
 | format | Shgifのフォーマット。_現在は'Page'のみ_ |
 | width  | Shgifの横幅 |
 | height | Shgifの高さ |
+| version | 使用しているフォーマットのバージョン |
 
 
 ### 3. timestampを決める
@@ -140,6 +156,7 @@ author: <作者名>
 format: Page
 width: <Shgifの横幅>
 height: <Shgifの高さ>
+version: <バージョン番号>
 data:
   - timestamp: 0
     contents: |-

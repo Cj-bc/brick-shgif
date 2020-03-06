@@ -3,8 +3,10 @@ author: Cj-bc
 format: Page
 width: 19
 height: 8
+fps: 1
+version: 1.0.0
 data:
-  - timestamp: 0
+  - timestamp: 0.0
     contents: |-
               anchor
               \_____       _____/
@@ -14,7 +16,7 @@ data:
 
                       -----
                       \___/
-  - timestamp: 1500
+  - timestamp: 0.3
     contents: |-
               anchor
                                  ,
@@ -24,7 +26,7 @@ data:
 
                       -----
                       \___/
-  - timestamp: 1550
+  - timestamp: 0.6
     contents: |-
               anchor
 
@@ -34,7 +36,7 @@ data:
 
                       -----
                       \___/
-  - timestamp: 1600
+  - timestamp: 0.9
     contents: |-
               `
                                  ,
@@ -44,7 +46,7 @@ data:
 
                       -----
                       \___/
-  - timestamp: 1650
+  - timestamp: 1.0
     contents: |-
               anchor
                                  ,

@@ -58,7 +58,9 @@ instance FromJSON Format
 
 -- instance FromJSON Shgif {{{
 instance FromJSON Shgif where
-  parseJSON = parseJSON' >>= validateVersion
+  parseJSON = do
+      sgf <- parseJSON'
+      validateVersion sgf
     where
         -- | Validate Shgif format version and fail if it's not supported.
         -- If it's supported, do nothing

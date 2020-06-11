@@ -27,6 +27,7 @@ module Shgif.Updater (
 import Shgif.Type.Internal
 import Control.Lens (over, set, (+~), (&), (^.), (.~))
 
+type Updater = Shgif -> IO Shgif
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.
 --
@@ -35,7 +36,7 @@ import Control.Lens (over, set, (+~), (&), (^.), (.~))
 -- This function __won't loop__ gif.
 --
 -- Use this if you want to show animation only once.
-updateShgifNoLoop :: Shgif -> IO Shgif
+updateShgifNoLoop :: Updater
 updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = updateShgifCore updateTick
     where
         lastTimeStamp = maximum $ map fst ds
@@ -50,7 +51,7 @@ updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = updateShgifCore updateTick
 -- This function reverse and __won't loop__ gif.
 --
 -- Use this if you want to show reversed animation for only once.
-updateShgifReversedNoLoop :: Shgif -> IO Shgif
+updateShgifReversedNoLoop :: Updater
 updateShgifReversedNoLoop shgif = updateShgifCore updateTick
     where
         updateTick | 0 < (shgif^.currentTick) = over currentTick (subtract 1)
@@ -64,19 +65,19 @@ updateShgifReversedNoLoop shgif = updateShgifCore updateTick
 -- This function reverse gif.
 --
 -- Use this if you want to show reversed animation.
-updateShgifReversed :: Shgif -> IO Shgif
+updateShgifReversed :: Updater
 updateShgifReversed shgif = updateShgifCore updateTick
     where
         lastTimeStamp = maximum $ map fst (shgif^.shgifData)
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | val < 0   = max
-                       
         updateTick = set currentTick (repeat lastTimeStamp $ (shgif^.currentTick) - 1)
+
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
 --
 -- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
 --
-updateShgif :: Shgif -> IO Shgif
+updateShgif :: Updater
 updateShgif shgif = updateShgifCore updateTick
     where
         lastTimeStamp = maximum $ map fst (shgif^.shgifData)
@@ -87,7 +88,7 @@ updateShgif shgif = updateShgifCore updateTick
 
 
 -- | Update 'Shgif''s internal tick state to make it closer to given tick
-updateShgifTo :: Int -> Shgif -> IO Shgif
+updateShgifTo :: Int -> Updater
 updateShgifTo tick shgif  = updateShgifCore (currentTick+~tickToAdd)
     where
         tickToAdd = case (shgif^.currentTick) `compare` tick of
@@ -97,7 +98,7 @@ updateShgifTo tick shgif  = updateShgifCore (currentTick+~tickToAdd)
 
 
 -- | Set 'Shgif''s internal tick state to given tick.
-setShgifTickTo :: Int -> Shgif -> IO Shgif
+setShgifTickTo :: Int -> Updater
 setShgifTickTo tick shgif = updateShgifCore (currentTick~.tick)
 
 

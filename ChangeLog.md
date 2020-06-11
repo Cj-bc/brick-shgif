@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Haskell Package Versioning policy](https://pvp.haskell.org/).
 
 ## Unreleased changes
+### Changed
+- Create common function 'updateShgifCore' and make all Updaters to use it. This will decrease maintenance cost.
+- Add 'Updater' type synonym to indicate Updater function
 
 ## [1.4.1.0] - 2020-03-02
 

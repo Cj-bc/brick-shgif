@@ -13,7 +13,7 @@ This module aims to hide some 'Only internal use' functions (like Lens)
 from 'Shgif.Type'.
 -}
 module Shgif.Type.Internal where
-import Control.Lens (makeLenses, (.~), (^.), (&), (+~), Lens)
+import Control.Lens (makeLenses, (.~), (^.), (&), (+~), Lens, set, view)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , withText
                  , Parser(..), Value(..)
@@ -162,3 +162,10 @@ addInitialCanvas sgf = do
     newC' <- shgifToCanvas $ sgf&canvas.~(Just newC)
     return $ sgf&canvas.~(Just newC')
 
+
+instance Updatable Shgif where
+    update updateTick shgif = do
+        newC <- shgifToCanvas $ updateTick shgif
+        return $ set canvas (Just newC) $ updateTick shgif
+    getTick = currentTick
+    getLastTimeStamp = maximum . map fst . view shgifData

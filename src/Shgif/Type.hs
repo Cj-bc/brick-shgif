@@ -15,6 +15,7 @@ module Shgif.Type (
     Format(..)
     , Shgif(..)
     , TimeStamp
+    , Updatable
 
     -- * Small functions for Shgif
     , shgifToCanvas

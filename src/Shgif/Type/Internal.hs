@@ -28,6 +28,16 @@ import Tart.Canvas (Canvas, canvasFromText, newCanvas)
 
 version = (1, 0, 0)
 
+
+-- | Mark Type as "Updatable"
+--
+-- Instances are able to use 'Updater'
+class Updatable a where
+    -- | The core for all 'Updater'
+    -- Implement this, and you can use all 'Updater' defined in 'Shgif.Updater'
+    update :: (a -> a) -> IO a
+
+
 -- | Format  of shgif file
 --
 -- Currently only Page is suported

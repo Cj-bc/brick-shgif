@@ -54,7 +54,7 @@ updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = updateShgifCore updateTick
 --
 -- Use this if you want to show reversed animation for only once.
 updateShgifReversedNoLoop :: Updater
-updateShgifReversedNoLoop shgif = updateShgifCore updateTick
+updateShgifReversedNoLoop shgif = updateShgifCore updateTick shgif
     where
         updateTick | 0 < (shgif^.currentTick) = over currentTick (subtract 1)
                    | otherwise                = id
@@ -68,7 +68,7 @@ updateShgifReversedNoLoop shgif = updateShgifCore updateTick
 --
 -- Use this if you want to show reversed animation.
 updateShgifReversed :: Updater
-updateShgifReversed shgif = updateShgifCore updateTick
+updateShgifReversed shgif = updateShgifCore updateTick shgif
     where
         lastTimeStamp = getLasTimestamp shgif
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
@@ -80,7 +80,7 @@ updateShgifReversed shgif = updateShgifCore updateTick
 -- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
 --
 updateShgif :: Updater
-updateShgif shgif = updateShgifCore updateTick
+updateShgif shgif = updateShgifCore updateTick shgif
     where
         lastTimeStamp = getLasTimestamp shgif
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
@@ -91,7 +91,7 @@ updateShgif shgif = updateShgifCore updateTick
 
 -- | Update 'Shgif''s internal tick state to make it closer to given tick
 updateShgifTo :: Int -> Updater
-updateShgifTo tick shgif  = updateShgifCore (currentTick+~tickToAdd)
+updateShgifTo tick shgif  = updateShgifCore (currentTick+~tickToAdd) shgif
     where
         tickToAdd = case (shgif^.currentTick) `compare` tick of
                         LT -> 1
@@ -101,15 +101,15 @@ updateShgifTo tick shgif  = updateShgifCore (currentTick+~tickToAdd)
 
 -- | Set 'Shgif''s internal tick state to given tick.
 setShgifTickTo :: Int -> Updater
-setShgifTickTo tick shgif = updateShgifCore (currentTick~.tick)
+setShgifTickTo tick = updateShgifCore (currentTick.~tick)
 
 
 -- | Core functionality of 'updateShgif'
 --
 -- This is expected to be used inside of other 'updateShgif' function.
 -- This apply 'updateTick' function to Shgif and return updated 'Shgif'
-updateShgifCore :: (Shgif -> Shgif) -> IO Shgif
-updateShgifCore updateTick = do
+updateShgifCore :: (Shgif -> Shgif) -> Shgif -> IO Shgif
+updateShgifCore updateTick shgif = do
     newC <- shgifToCanvas $ updateTick shgif
     return $ set canvas (Just newC) $ updateTick shgif
 

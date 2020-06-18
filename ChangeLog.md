@@ -6,6 +6,8 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 ### Changed
+- Shgif format: 1.0.0
+- Update shgif examples to support shgif 1.0.0
 - Create common function 'updateShgifCore' and make all Updaters to use it. This will decrease maintenance cost.
 - Add 'Updater' type synonym to indicate Updater function
 

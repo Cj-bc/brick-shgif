@@ -26,6 +26,8 @@ module Shgif.Updater (
 ) where
 import Shgif.Type.Internal
 import Control.Lens (over, set, (+~), (&), (^.), (.~))
+getLastTimeStamp :: Shgif -> Int
+getLastTimeStamp = maximum . map fst . view shgifData
 
 type Updater = Shgif -> IO Shgif
 
@@ -39,9 +41,9 @@ type Updater = Shgif -> IO Shgif
 updateShgifNoLoop :: Updater
 updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = updateShgifCore updateTick
     where
-        lastTimeStamp = maximum $ map fst ds
         updateTick | tick <= lastTimeStamp = over currentTick (+ 1)
                    | otherwise             = id
+        lastTimeStamp = getLastTimeStamp shgif
 
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
@@ -68,7 +70,7 @@ updateShgifReversedNoLoop shgif = updateShgifCore updateTick
 updateShgifReversed :: Updater
 updateShgifReversed shgif = updateShgifCore updateTick
     where
-        lastTimeStamp = maximum $ map fst (shgif^.shgifData)
+        lastTimeStamp = getLasTimestamp shgif
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | val < 0   = max
         updateTick = set currentTick (repeat lastTimeStamp $ (shgif^.currentTick) - 1)
@@ -80,7 +82,7 @@ updateShgifReversed shgif = updateShgifCore updateTick
 updateShgif :: Updater
 updateShgif shgif = updateShgifCore updateTick
     where
-        lastTimeStamp = maximum $ map fst (shgif^.shgifData)
+        lastTimeStamp = getLasTimestamp shgif
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | max < val = 0
                        | otherwise = val

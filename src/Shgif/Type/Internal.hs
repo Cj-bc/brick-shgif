@@ -1,6 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE Rank2Types #-}
 {-# OPTIONS_HADDOCK hide #-}
 {-|
 Module      : Shgif.Type.Internal
@@ -55,6 +56,11 @@ data Format = Page -- ^ list data as list of String
 
 -- | TimeStamp is used to represent one _frame_
 type TimeStamp = (Int, [String])
+
+-- | 'Shgif.Updater'
+--
+-- Updater takes 'Updatable' value and return updated result.
+type Updater = forall a. Updatable a => a -> IO a
 
 -- | The main datatype that holds Shgif data
 data Shgif = Shgif { _title     :: String

@@ -11,6 +11,7 @@ This module provides lots kind of __updater__.
 
 Each Updater has different update method.
 -}
+{-# LANGUAGE Rank2Types #-}
 module Shgif.Updater (
     -- * Normal
       updateShgif
@@ -29,7 +30,6 @@ import Control.Lens (over, set, (+~), (&), (^.), (.~))
 getLastTimeStamp :: Shgif -> Int
 getLastTimeStamp = maximum . map fst . view shgifData
 
-type Updater = Shgif -> IO Shgif
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.
 --

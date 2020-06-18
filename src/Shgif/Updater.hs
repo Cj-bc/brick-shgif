@@ -26,10 +26,7 @@ module Shgif.Updater (
     , setShgifTickTo
 ) where
 import Shgif.Type.Internal
-import Control.Lens (over, set, (+~), (&), (^.), (.~))
-getLastTimeStamp :: Shgif -> Int
-getLastTimeStamp = maximum . map fst . view shgifData
-
+import Control.Lens (over, set, (+~), (&), (^.), (.~), view)
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.
 --
@@ -39,11 +36,11 @@ getLastTimeStamp = maximum . map fst . view shgifData
 --
 -- Use this if you want to show animation only once.
 updateShgifNoLoop :: Updater
-updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = updateShgifCore updateTick
+updateShgifNoLoop shgif = update updateTick shgif
     where
-        updateTick | tick <= lastTimeStamp = over currentTick (+ 1)
-                   | otherwise             = id
         lastTimeStamp = getLastTimeStamp shgif
+        updateTick | (shgif^.getTick) <= lastTimeStamp = over getTick (+ 1)
+                   | otherwise                             = id
 
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
@@ -54,9 +51,9 @@ updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = updateShgifCore updateTick
 --
 -- Use this if you want to show reversed animation for only once.
 updateShgifReversedNoLoop :: Updater
-updateShgifReversedNoLoop shgif = updateShgifCore updateTick shgif
+updateShgifReversedNoLoop shgif = update updateTick shgif
     where
-        updateTick | 0 < (shgif^.currentTick) = over currentTick (subtract 1)
+        updateTick | 0 < (shgif^.getTick) = over getTick (subtract 1)
                    | otherwise                = id
 
 
@@ -68,32 +65,32 @@ updateShgifReversedNoLoop shgif = updateShgifCore updateTick shgif
 --
 -- Use this if you want to show reversed animation.
 updateShgifReversed :: Updater
-updateShgifReversed shgif = updateShgifCore updateTick shgif
+updateShgifReversed shgif = update updateTick shgif
     where
-        lastTimeStamp = getLasTimestamp shgif
+        lastTimeStamp = getLastTimeStamp shgif
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | val < 0   = max
-        updateTick = set currentTick (repeat lastTimeStamp $ (shgif^.currentTick) - 1)
+        updateTick = set getTick (repeat lastTimeStamp $ (shgif^.getTick) - 1)
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
 --
 -- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
 --
 updateShgif :: Updater
-updateShgif shgif = updateShgifCore updateTick shgif
+updateShgif shgif = update updateTick shgif
     where
-        lastTimeStamp = getLasTimestamp shgif
+        lastTimeStamp = getLastTimeStamp shgif
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | max < val = 0
                        | otherwise = val
-        updateTick = set currentTick (repeat lastTimeStamp $ (shgif^.currentTick) + 1)
+        updateTick = set getTick (repeat lastTimeStamp $ (shgif^.getTick) + 1)
 
 
 -- | Update 'Shgif''s internal tick state to make it closer to given tick
 updateShgifTo :: Int -> Updater
-updateShgifTo tick shgif  = updateShgifCore (currentTick+~tickToAdd) shgif
+updateShgifTo tick shgif  = update (getTick+~tickToAdd) shgif
     where
-        tickToAdd = case (shgif^.currentTick) `compare` tick of
+        tickToAdd = case (shgif^.getTick) `compare` tick of
                         LT -> 1
                         EQ -> 0
                         GT -> -1
@@ -101,16 +98,4 @@ updateShgifTo tick shgif  = updateShgifCore (currentTick+~tickToAdd) shgif
 
 -- | Set 'Shgif''s internal tick state to given tick.
 setShgifTickTo :: Int -> Updater
-setShgifTickTo tick = updateShgifCore (currentTick.~tick)
-
-
--- | Core functionality of 'updateShgif'
---
--- This is expected to be used inside of other 'updateShgif' function.
--- This apply 'updateTick' function to Shgif and return updated 'Shgif'
-updateShgifCore :: (Shgif -> Shgif) -> Shgif -> IO Shgif
-updateShgifCore updateTick shgif = do
-    newC <- shgifToCanvas $ updateTick shgif
-    return $ set canvas (Just newC) $ updateTick shgif
-
-
+setShgifTickTo tick = update (getTick.~tick)

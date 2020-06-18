@@ -35,7 +35,7 @@ version = (1, 0, 0)
 class Updatable a where
     -- | The core for all 'Updater'
     -- Implement this, and you can use all 'Updater' defined in 'Shgif.Updater'
-    update :: (a -> a) -> IO a
+    update :: (a -> a) -> a -> IO a
 
     -- | Lens to get tick from 'a'
     getTick :: Lens a a Int Int

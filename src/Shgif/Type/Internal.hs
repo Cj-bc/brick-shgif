@@ -13,7 +13,7 @@ This module aims to hide some 'Only internal use' functions (like Lens)
 from 'Shgif.Type'.
 -}
 module Shgif.Type.Internal where
-import Control.Lens (makeLenses, (.~), (^.), (&), (+~))
+import Control.Lens (makeLenses, (.~), (^.), (&), (+~), Lens)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , withText
                  , Parser(..), Value(..)
@@ -36,6 +36,12 @@ class Updatable a where
     -- | The core for all 'Updater'
     -- Implement this, and you can use all 'Updater' defined in 'Shgif.Updater'
     update :: (a -> a) -> IO a
+
+    -- | Lens to get tick from 'a'
+    getTick :: Lens a a Int Int
+
+    -- | Get the last timestamp in 'a'
+    getLastTimeStamp :: a -> Int
 
 
 -- | Format  of shgif file

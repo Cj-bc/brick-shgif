@@ -113,13 +113,13 @@ main = do
 
 The __Updater__ function in `Shgif.Updater` module will update `Shgif`'s internal tick state,
 which will affect frame rendering.  
-As all of them has type `Shgif -> IO Shgif`, it can be called inside brick's `EventM` monad.
+As all of them is in IO monad, it can be called inside brick's `EventM` monad.
 
 ```haskell
 -- eHandler is used `appHandleEvent` for `App`
 eHandler s (AppEvent Tick) = do
     let oldsgf = ... -- get old Shgif data
-    newsgf <- liftIO (updateShgif oldsgf)
+    newsgf <- liftIO (updateNormal oldsgf)
     continue $ ... -- continue with replacing oldsgf with newsgf
 ```
 
@@ -129,14 +129,14 @@ Those functions below will control looping and reversing
 
 | `function` | reversed | looped |
 |:-:|:-:|:-:|
-| `updateShgif` | No  | Yes |
-| `updateShgifNoLoop` | No  | No |
-| `updateShgifReversed` | Yes  | Yes |
-| `updateShgifReversedNoLoop` | Yes  | No |
+| `updateNormal` | No  | Yes |
+| `updateNoLoop` | No  | No |
+| `updateReversed` | Yes  | Yes |
+| `updateReversedNoLoop` | Yes  | No |
 
 #### Control more flexibly
 
-The function `updateShgifTo` will update internal tick to make it closer to given number.  
+The function `updateTo` will update internal tick to make it closer to given number.  
 If internal tick is equal to the given number, it won't change anything.
 
 

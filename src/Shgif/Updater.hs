@@ -14,29 +14,27 @@ Each Updater has different update method.
 {-# LANGUAGE Rank2Types #-}
 module Shgif.Updater (
     -- * Normal
-      updateShgif
+      updateNormal
 
     -- With loop/reversed setting
-    , updateShgifNoLoop
-    , updateShgifReversed
-    , updateShgifReversedNoLoop
+    , updateNoLoop
+    , updateReversed
+    , updateReversedNoLoop
 
     -- * Flexible changing
-    , updateShgifTo
-    , setShgifTickTo
+    , updateTo
+    , setTickTo
 ) where
 import Shgif.Type.Internal
 import Control.Lens (over, set, (+~), (&), (^.), (.~), view)
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.
 --
--- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside 'Brick.EventM' monad.
---
 -- This function __won't loop__ gif.
 --
 -- Use this if you want to show animation only once.
-updateShgifNoLoop :: Updater
-updateShgifNoLoop shgif = update updateTick shgif
+updateNoLoop :: Updater
+updateNoLoop shgif = update updateTick shgif
     where
         lastTimeStamp = getLastTimeStamp shgif
         updateTick | (shgif^.getTick) <= lastTimeStamp = over getTick (+ 1)
@@ -45,13 +43,11 @@ updateShgifNoLoop shgif = update updateTick shgif
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
 --
--- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
---
 -- This function reverse and __won't loop__ gif.
 --
 -- Use this if you want to show reversed animation for only once.
-updateShgifReversedNoLoop :: Updater
-updateShgifReversedNoLoop shgif = update updateTick shgif
+updateReversedNoLoop :: Updater
+updateReversedNoLoop shgif = update updateTick shgif
     where
         updateTick | 0 < (shgif^.getTick) = over getTick (subtract 1)
                    | otherwise                = id
@@ -59,13 +55,11 @@ updateShgifReversedNoLoop shgif = update updateTick shgif
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
 --
--- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
---
 -- This function reverse gif.
 --
 -- Use this if you want to show reversed animation.
-updateShgifReversed :: Updater
-updateShgifReversed shgif = update updateTick shgif
+updateReversed :: Updater
+updateReversed shgif = update updateTick shgif
     where
         lastTimeStamp = getLastTimeStamp shgif
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
@@ -73,11 +67,8 @@ updateShgifReversed shgif = update updateTick shgif
         updateTick = set getTick (repeat lastTimeStamp $ (shgif^.getTick) - 1)
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
---
--- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
---
-updateShgif :: Updater
-updateShgif shgif = update updateTick shgif
+updateNormal :: Updater
+updateNormal shgif = update updateTick shgif
     where
         lastTimeStamp = getLastTimeStamp shgif
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
@@ -87,8 +78,8 @@ updateShgif shgif = update updateTick shgif
 
 
 -- | Update 'Shgif''s internal tick state to make it closer to given tick
-updateShgifTo :: Int -> Updater
-updateShgifTo tick shgif  = update (getTick+~tickToAdd) shgif
+updateTo :: Int -> Updater
+updateTo tick shgif  = update (getTick+~tickToAdd) shgif
     where
         tickToAdd = case (shgif^.getTick) `compare` tick of
                         LT -> 1
@@ -97,5 +88,5 @@ updateShgifTo tick shgif  = update (getTick+~tickToAdd) shgif
 
 
 -- | Set 'Shgif''s internal tick state to given tick.
-setShgifTickTo :: Int -> Updater
-setShgifTickTo tick = update (getTick.~tick)
+setTickTo :: Int -> Updater
+setTickTo tick = update (getTick.~tick)

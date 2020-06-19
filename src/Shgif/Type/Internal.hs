@@ -14,7 +14,7 @@ This module aims to hide some 'Only internal use' functions (like Lens)
 from 'Shgif.Type'.
 -}
 module Shgif.Type.Internal where
-import Control.Lens (makeLenses, (.~), (^.), (&), (+~), Lens, set, view)
+import Control.Lens (makeLenses, (.~), (^.), (&), (+~), Lens, set, view, over)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , withText
                  , Parser(..), Value(..)
@@ -37,10 +37,10 @@ version = (1, 0, 0)
 class Updatable a where
     -- | The core for all 'Updater'
     -- Implement this, and you can use all 'Updater' defined in 'Shgif.Updater'
-    update :: (a -> a) -> a -> IO a
-
-    -- | Lens to get tick from 'a'
-    getTick :: Lens a a Int Int
+    --
+    -- First argument is a function which takes current tick and return updated tick.
+    -- Because of the instances that hold multiple ticks, I keep it to update only one tick
+    update :: (Int -> Int) -> a -> IO a
 
     -- | Get the last timestamp in 'a'
     getLastTimeStamp :: a -> Int
@@ -183,7 +183,7 @@ addInitialCanvas sgf = do
 
 instance Updatable Shgif where
     update updateTick shgif = do
-        newC <- shgifToCanvas $ updateTick shgif
-        return $ set canvas (Just newC) $ updateTick shgif
-    getTick = currentTick
+        let updated = over currentTick updateTick shgif
+        newC <- shgifToCanvas updated
+        return $ set canvas (Just newC) updated
     getLastTimeStamp = maximum . map fst . view shgifData

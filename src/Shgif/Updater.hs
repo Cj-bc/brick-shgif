@@ -37,8 +37,8 @@ updateNoLoop :: Updater
 updateNoLoop updatable = update updateTick updatable
     where
         lastTimeStamp = getLastTimeStamp updatable
-        updateTick | (updatable^.getTick) <= lastTimeStamp = over getTick (+ 1)
-                   | otherwise                             = id
+        updateTick i | i <= lastTimeStamp = i + 1
+                     | otherwise          = i
 
 
 -- | Update internal tick state, which will affect frame rendering.  
@@ -49,8 +49,8 @@ updateNoLoop updatable = update updateTick updatable
 updateReversedNoLoop :: Updater
 updateReversedNoLoop updatable = update updateTick updatable
     where
-        updateTick | 0 < (updatable^.getTick) = over getTick (subtract 1)
-                   | otherwise                = id
+        updateTick i | 0 < i     = i - 1
+                     | otherwise = i
 
 
 -- | Update internal tick state, which will affect frame rendering.  
@@ -63,8 +63,9 @@ updateReversed updatable = update updateTick updatable
     where
         lastTimeStamp = getLastTimeStamp updatable
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
-        repeat max val | val < 0   = max
-        updateTick = set getTick (repeat lastTimeStamp $ (updatable^.getTick) - 1)
+        repeatReversed max val | val < 0   = max
+                               | otherwise = val
+        updateTick = repeatReversed lastTimeStamp . (- 1)
 
 -- | Update internal tick state, which will affect frame rendering.  
 updateNormal :: Updater
@@ -74,19 +75,20 @@ updateNormal updatable = update updateTick updatable
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | max < val = 0
                        | otherwise = val
-        updateTick = set getTick (repeat lastTimeStamp $ (updatable^.getTick) + 1)
+        updateTick :: Int -> Int
+        updateTick = repeat lastTimeStamp . (+ 1)
 
 
 -- | Update internal tick state to make it closer to given tick
 updateTo :: Int -> Updater
-updateTo tick updatable  = update (getTick+~tickToAdd) updatable
+updateTo tick updatable  = update updateTick updatable
     where
-        tickToAdd = case (updatable^.getTick) `compare` tick of
-                        LT -> 1
-                        EQ -> 0
-                        GT -> -1
+        updateTick i = case i `compare` tick of
+                            LT -> i + 1
+                            EQ -> i
+                            GT -> i - 1
 
 
 -- | Set internal tick state to given tick.
 setTickTo :: Int -> Updater
-setTickTo tick = update (getTick.~tick)
+setTickTo tick = update (const tick)

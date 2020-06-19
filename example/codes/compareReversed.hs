@@ -13,7 +13,7 @@ import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
 import Brick.Extensions.Shgif.Widgets (shgif)
 import Shgif.Type (Shgif(..))
 import Shgif.Loader (fromFile)
-import Shgif.Updater (updateShgif, updateShgifReversed)
+import Shgif.Updater (updateNormal, updateReversed)
 
 type AppState = (Shgif, Shgif)
 data Name = NoName deriving (Eq, Ord)
@@ -33,8 +33,8 @@ ui (s, r) = [vBox [border (shgif s), str "original"] <+>
 eHandler :: AppState -> BrickEvent Name TickEvent -> EventM Name (Next AppState)
 eHandler s (VtyEvent (Vty.EvKey (Vty.KChar 'q') [])) = halt s
 eHandler (s, r) (AppEvent Tick)  = continue =<< liftIO (do
-                            ns <- updateShgif s
-                            nr <- updateShgifReversed r
+                            ns <- updateNormal s
+                            nr <- updateReversed r
                             return (ns, nr))
 eHandler s _ = continue s
 

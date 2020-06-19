@@ -8,7 +8,7 @@ import Control.Monad (void)
 import Control.Monad.IO.Class (liftIO)
 import Tart.Format (readTartFile, sortedCanvases, TartFile(..), toTartFilepath)
 import Shgif.Type (Shgif)
-import Shgif.Updater (updateShgif)
+import Shgif.Updater (updateNormal)
 import Shgif.Loader (fromTartFile)
 import qualified Graphics.Vty as Vty
 
@@ -19,7 +19,7 @@ ui = pure . shgif
 
 eHandler :: AppState -> BrickEvent Name TickEvent -> EventM Name (Next AppState)
 eHandler s (VtyEvent (Vty.EvKey (Vty.KChar 'q') [])) = halt s
-eHandler s (AppEvent Tick) = liftIO (updateShgif s) >>= continue
+eHandler s (AppEvent Tick) = liftIO (updateNormal s) >>= continue
 eHandler s _ = continue s
 
 app = App {appDraw = ui

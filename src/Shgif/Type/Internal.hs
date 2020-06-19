@@ -1,6 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE Rank2Types #-}
 {-# OPTIONS_HADDOCK hide #-}
 {-|
 Module      : Shgif.Type.Internal
@@ -13,7 +14,7 @@ This module aims to hide some 'Only internal use' functions (like Lens)
 from 'Shgif.Type'.
 -}
 module Shgif.Type.Internal where
-import Control.Lens (makeLenses, (.~), (^.), (&), (+~))
+import Control.Lens (makeLenses, (.~), (^.), (&), (+~), Lens, set, view)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , withText
                  , Parser(..), Value(..)
@@ -28,6 +29,22 @@ import Tart.Canvas (Canvas, canvasFromText, newCanvas)
 
 version = (1, 0, 0)
 
+
+-- | Mark Type as "Updatable"
+--
+-- Instances are able to use 'Updater'
+class Updatable a where
+    -- | The core for all 'Updater'
+    -- Implement this, and you can use all 'Updater' defined in 'Shgif.Updater'
+    update :: (a -> a) -> a -> IO a
+
+    -- | Lens to get tick from 'a'
+    getTick :: Lens a a Int Int
+
+    -- | Get the last timestamp in 'a'
+    getLastTimeStamp :: a -> Int
+
+
 -- | Format  of shgif file
 --
 -- Currently only Page is suported
@@ -39,6 +56,11 @@ data Format = Page -- ^ list data as list of String
 
 -- | TimeStamp is used to represent one _frame_
 type TimeStamp = (Int, [String])
+
+-- | 'Shgif.Updater'
+--
+-- Updater takes 'Updatable' value and return updated result.
+type Updater = forall a. Updatable a => a -> IO a
 
 -- | The main datatype that holds Shgif data
 data Shgif = Shgif { _title     :: String
@@ -146,3 +168,10 @@ addInitialCanvas sgf = do
     newC' <- shgifToCanvas $ sgf&canvas.~(Just newC)
     return $ sgf&canvas.~(Just newC')
 
+
+instance Updatable Shgif where
+    update updateTick shgif = do
+        newC <- shgifToCanvas $ updateTick shgif
+        return $ set canvas (Just newC) $ updateTick shgif
+    getTick = currentTick
+    getLastTimeStamp = maximum . map fst . view shgifData

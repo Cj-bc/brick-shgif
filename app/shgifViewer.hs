@@ -20,11 +20,11 @@ import Brick.BChan (newBChan, writeBChan, BChan)
 import Brick.Extensions.Shgif.Widgets (shgif)
 import Shgif.Type (Shgif(..))
 import Shgif.Loader (fromFile)
-import Shgif.Updater ( updateShgif
-                     , updateShgifReversed
-                     , updateShgifNoLoop
-                     , updateShgifReversedNoLoop
-                     , updateShgifNoLoop
+import Shgif.Updater ( updateNormal
+                     , updateReversed
+                     , updateNoLoop
+                     , updateReversedNoLoop
+                     , updateNoLoop
                      )
 import Options.Applicative
 
@@ -136,10 +136,10 @@ main = do
     (flag, filename) <- execParser optionInfo
 
     let f = case flag of
-                (AppFlags True False  _ _) -> updateShgifNoLoop
-                (AppFlags True True   _ _) -> updateShgifReversedNoLoop
-                (AppFlags False False _ _) -> updateShgif
-                (AppFlags False True  _ _) -> updateShgifReversed
+                (AppFlags True False  _ _) -> updateNoLoop
+                (AppFlags True True   _ _) -> updateReversedNoLoop
+                (AppFlags False False _ _) -> updateNormal
+                (AppFlags False True  _ _) -> updateReversed
         AppFlags _ _ speed watch = flag
     -- }}}
 

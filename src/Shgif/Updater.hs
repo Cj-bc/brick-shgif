@@ -11,104 +11,82 @@ This module provides lots kind of __updater__.
 
 Each Updater has different update method.
 -}
+{-# LANGUAGE Rank2Types #-}
 module Shgif.Updater (
     -- * Normal
-      updateShgif
+      updateNormal
 
     -- With loop/reversed setting
-    , updateShgifNoLoop
-    , updateShgifReversed
-    , updateShgifReversedNoLoop
+    , updateNoLoop
+    , updateReversed
+    , updateReversedNoLoop
 
     -- * Flexible changing
-    , updateShgifTo
-    , setShgifTickTo
+    , updateTo
+    , setTickTo
 ) where
 import Shgif.Type.Internal
-import Control.Lens (over, set, (+~), (&), (^.), (.~))
+import Control.Lens (over, set, (+~), (&), (^.), (.~), view)
 
-type Updater = Shgif -> IO Shgif
-
--- | Update 'Shgif''s internal tick state, which will affect frame rendering.
---
--- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside 'Brick.EventM' monad.
+-- | Update internal tick state, which will affect frame rendering.
 --
 -- This function __won't loop__ gif.
 --
 -- Use this if you want to show animation only once.
-updateShgifNoLoop :: Updater
-updateShgifNoLoop shgif@(Shgif t a f w h tick ds c) = updateShgifCore updateTick
+updateNoLoop :: Updater
+updateNoLoop updatable = update updateTick updatable
     where
-        lastTimeStamp = maximum $ map fst ds
-        updateTick | tick <= lastTimeStamp = over currentTick (+ 1)
-                   | otherwise             = id
+        lastTimeStamp = getLastTimeStamp updatable
+        updateTick | (updatable^.getTick) <= lastTimeStamp = over getTick (+ 1)
+                   | otherwise                             = id
 
 
--- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
---
--- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
+-- | Update internal tick state, which will affect frame rendering.  
 --
 -- This function reverse and __won't loop__ gif.
 --
 -- Use this if you want to show reversed animation for only once.
-updateShgifReversedNoLoop :: Updater
-updateShgifReversedNoLoop shgif = updateShgifCore updateTick
+updateReversedNoLoop :: Updater
+updateReversedNoLoop updatable = update updateTick updatable
     where
-        updateTick | 0 < (shgif^.currentTick) = over currentTick (subtract 1)
+        updateTick | 0 < (updatable^.getTick) = over getTick (subtract 1)
                    | otherwise                = id
 
 
--- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
---
--- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
+-- | Update internal tick state, which will affect frame rendering.  
 --
 -- This function reverse gif.
 --
 -- Use this if you want to show reversed animation.
-updateShgifReversed :: Updater
-updateShgifReversed shgif = updateShgifCore updateTick
+updateReversed :: Updater
+updateReversed updatable = update updateTick updatable
     where
-        lastTimeStamp = maximum $ map fst (shgif^.shgifData)
+        lastTimeStamp = getLastTimeStamp updatable
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | val < 0   = max
-        updateTick = set currentTick (repeat lastTimeStamp $ (shgif^.currentTick) - 1)
+        updateTick = set getTick (repeat lastTimeStamp $ (updatable^.getTick) - 1)
 
--- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
---
--- As 'updateShgif' has type `Shgif -> IO Shgif`, it can be called inside brick's 'Brick.EventM' monad.
---
-updateShgif :: Updater
-updateShgif shgif = updateShgifCore updateTick
+-- | Update internal tick state, which will affect frame rendering.  
+updateNormal :: Updater
+updateNormal updatable = update updateTick updatable
     where
-        lastTimeStamp = maximum $ map fst (shgif^.shgifData)
+        lastTimeStamp = getLastTimeStamp updatable
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | max < val = 0
                        | otherwise = val
-        updateTick = set currentTick (repeat lastTimeStamp $ (shgif^.currentTick) + 1)
+        updateTick = set getTick (repeat lastTimeStamp $ (updatable^.getTick) + 1)
 
 
--- | Update 'Shgif''s internal tick state to make it closer to given tick
-updateShgifTo :: Int -> Updater
-updateShgifTo tick shgif  = updateShgifCore (currentTick+~tickToAdd)
+-- | Update internal tick state to make it closer to given tick
+updateTo :: Int -> Updater
+updateTo tick updatable  = update (getTick+~tickToAdd) updatable
     where
-        tickToAdd = case (shgif^.currentTick) `compare` tick of
+        tickToAdd = case (updatable^.getTick) `compare` tick of
                         LT -> 1
                         EQ -> 0
                         GT -> -1
 
 
--- | Set 'Shgif''s internal tick state to given tick.
-setShgifTickTo :: Int -> Updater
-setShgifTickTo tick shgif = updateShgifCore (currentTick~.tick)
-
-
--- | Core functionality of 'updateShgif'
---
--- This is expected to be used inside of other 'updateShgif' function.
--- This apply 'updateTick' function to Shgif and return updated 'Shgif'
-updateShgifCore :: (Shgif -> Shgif) -> IO Shgif
-updateShgifCore updateTick = do
-    newC <- shgifToCanvas $ updateTick shgif
-    return $ set canvas (Just newC) $ updateTick shgif
-
-
+-- | Set internal tick state to given tick.
+setTickTo :: Int -> Updater
+setTickTo tick = update (getTick.~tick)

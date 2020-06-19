@@ -10,6 +10,11 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 - Update shgif examples to support shgif 1.0.0
 - Create common function 'updateShgifCore' and make all Updaters to use it. This will decrease maintenance cost.
 - Add 'Updater' type synonym to indicate Updater function
+- Add 'Updatable' type class. This allows to use all 'Updater' with any instance of Updatable
+- Add 'Updatable' instance for 'Shgif'
+- Rename all functions in 'Shgif.Updater' to generalized name
+- Use 'Rank2Types' extension in Shgif.Updater and Shgif.Type.Internal
+- Update all examples to use new Updater
 
 ## [1.4.1.0] - 2020-03-02
 

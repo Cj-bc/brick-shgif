@@ -6,6 +6,12 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.5.0.1] - 2020-06-19
+
+### Fixed
+- Rename all updaters in document
+
+
 ## [1.5.0.0] - 2020-06-19
 
 ### Added

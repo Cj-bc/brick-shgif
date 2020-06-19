@@ -13,7 +13,7 @@ import Brick.Widgets.Border (border)
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
 import Brick.Extensions.Shgif.Widgets (shgif)
 import Shgif.Type (Shgif(..))
-import Shgif.Updater (updateShgif)
+import Shgif.Updater (updateNormal)
 import Shgif.Loader (fromFiles)
 
 type AppState = [Shgif]
@@ -32,7 +32,7 @@ ui s = [foldl1 (<+>) $ map (border . shgif) s]
 
 eHandler :: AppState -> BrickEvent Name TickEvent -> EventM Name (Next AppState)
 eHandler s (VtyEvent (Vty.EvKey (Vty.KChar 'q') [])) = halt s
-eHandler s (AppEvent Tick)  = liftIO (sequence (map updateShgif s)) >>= continue
+eHandler s (AppEvent Tick)  = liftIO (sequence (map updateNormal s)) >>= continue
 eHandler s _ = continue s
 
 main :: IO ()

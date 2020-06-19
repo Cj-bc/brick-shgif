@@ -3,6 +3,7 @@ author: Author of the shgif
 format: Page # Currently only 'Page' work
 width: 20 # width of your shgif
 height: 3 # height of your shgif
+version: 1.0.0 # shgif format version
 data: # list of shgif frame
   - timestamp: 0 # timestamp should be start from 0
     # The first line of 'contents' is __anchor__

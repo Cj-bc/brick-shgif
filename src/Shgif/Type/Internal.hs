@@ -1,6 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE Rank2Types #-}
 {-# OPTIONS_HADDOCK hide #-}
 {-|
 Module      : Shgif.Type.Internal
@@ -13,19 +14,36 @@ This module aims to hide some 'Only internal use' functions (like Lens)
 from 'Shgif.Type'.
 -}
 module Shgif.Type.Internal where
-import Control.Lens (makeLenses, (.~), (^.), (&), (+~))
-
+import Control.Lens (makeLenses, (.~), (^.), (&), (+~), Lens, set, view)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , withText
                  , Parser(..), Value(..)
                  , decodeFileEither)
 import Data.HashMap.Lazy ((!))
 import qualified Data.Vector as V
-import Data.Text (unpack)
+import Data.Text (unpack, splitOn, Text)
 import Data.Maybe (fromMaybe)
 
 import GHC.Generics (Generic)
 import Tart.Canvas (Canvas, canvasFromText, newCanvas)
+
+version = (1, 0, 0)
+
+
+-- | Mark Type as "Updatable"
+--
+-- Instances are able to use 'Updater'
+class Updatable a where
+    -- | The core for all 'Updater'
+    -- Implement this, and you can use all 'Updater' defined in 'Shgif.Updater'
+    update :: (a -> a) -> a -> IO a
+
+    -- | Lens to get tick from 'a'
+    getTick :: Lens a a Int Int
+
+    -- | Get the last timestamp in 'a'
+    getLastTimeStamp :: a -> Int
+
 
 -- | Format  of shgif file
 --
@@ -38,6 +56,11 @@ data Format = Page -- ^ list data as list of String
 
 -- | TimeStamp is used to represent one _frame_
 type TimeStamp = (Int, [String])
+
+-- | 'Shgif.Updater'
+--
+-- Updater takes 'Updatable' value and return updated result.
+type Updater = forall a. Updatable a => a -> IO a
 
 -- | The main datatype that holds Shgif data
 data Shgif = Shgif { _title     :: String
@@ -57,15 +80,45 @@ instance FromJSON Format
 
 -- instance FromJSON Shgif {{{
 instance FromJSON Shgif where
-  parseJSON = withObject "Shgif" $ \v -> Shgif
-        <$> v .: "title"
-        <*> v .: "author"
-        <*> v .: "format"
-        <*> v .: "width"
-        <*> v .: "height"
-        <*> return 0
-        <*> parseFrame (v ! "data")
-        <*> return Nothing
+  parseJSON = do
+      sgf <- parseJSON'
+      validateVersion sgf
+    where
+        -- | Validate Shgif format version and fail if it's not supported.
+        -- If it's supported, do nothing
+        --
+        -- Supported version is:
+        --
+        -- - The same major version
+        -- - The same or smaller minor version
+        validateVersion sgf = withObject "Shgif" $ \v -> do
+                            let getMajorV (a, _, _) = a
+                                getMinorV (_, a, _) = a
+                                parseVersion        = withText "version" $ \v -> do
+                                                        let versions = map (read . unpack) $ splitOn (".") v
+                                                        if (length versions /= 3)
+                                                          then fail "Unsupported version format"
+                                                          else return (versions !! 0, versions !! 1, versions !! 2)
+                                condition lib file  = (getMajorV lib == getMajorV file)
+                                                      && (getMinorV lib >= getMinorV file)
+
+                            usedVersion <- parseVersion (v ! "version")
+                            if (condition version usedVersion)
+                              then sgf
+                              else fail . unlines $ ["Shgif format version mismatch. Major version should be the same."
+                                                    , "Supported version: " ++ (show version)
+                                                    , "Used version: " ++ (show usedVersion)
+                                                    ]
+
+        parseJSON' = withObject "Shgif" $ \v -> Shgif
+                        <$> v .: "title"
+                        <*> v .: "author"
+                        <*> v .: "format"
+                        <*> v .: "width"
+                        <*> v .: "height"
+                        <*> return 0
+                        <*> parseFrame (v ! "data")
+                        <*> return Nothing
 
 parseFrame :: Value -> Parser [TimeStamp]
 parseFrame = withArray "data" $ \a -> sequence $ V.toList $ V.map parseTimeStamp a
@@ -115,3 +168,10 @@ addInitialCanvas sgf = do
     newC' <- shgifToCanvas $ sgf&canvas.~(Just newC)
     return $ sgf&canvas.~(Just newC')
 
+
+instance Updatable Shgif where
+    update updateTick shgif = do
+        newC <- shgifToCanvas $ updateTick shgif
+        return $ set canvas (Just newC) $ updateTick shgif
+    getTick = currentTick
+    getLastTimeStamp = maximum . map fst . view shgifData

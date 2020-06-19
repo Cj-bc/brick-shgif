@@ -1,5 +1,5 @@
 name:                brick-shgif
-version:             1.4.0.1
+version:             1.5.0.0
 github:              "Cj-bc/brick-shgif"
 license:             BSD3
 author:              "Cj.bc_sd a.k.a Cj-bc"
@@ -45,6 +45,8 @@ executables:
     dependencies:
     - brick-shgif
     - optparse-applicative
+    - fsnotify
+    - filepath
 
 tests:
   brick-shgif-test:

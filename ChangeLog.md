@@ -6,6 +6,26 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.5.0.0] - 2020-06-19
+
+### Added
+- Add 'Updater' type synonym to indicate Updater function
+- Add 'Updatable' type class. This allows to use all 'Updater' with any instance of Updatable
+- Add 'Updatable' instance for 'Shgif'
+- Use 'Rank2Types' extension in Shgif.Updater and Shgif.Type.Internal
+
+### Changed
+- Shgif format: 1.0.0
+- Update shgif examples to support shgif 1.0.0
+- Rename all functions in 'Shgif.Updater' to generalized name
+- Update all examples to use new Updater
+
+## [1.4.1.0] - 2020-03-02
+
+### Added
+- New Updater: 'setShgifTickTo'
+- Example for 'setShgifTickTo'
+
 ## [1.4.0.1] - 2020-02-23
 
 ### Fixed

@@ -10,7 +10,7 @@ import Data.Either (isLeft)
 import qualified Graphics.Vty as Vty
 import Shgif.Type (Shgif(..))
 import Shgif.Loader (fromFile)
-import Shgif.Updater (setShgifTickTo)
+import Shgif.Updater (setTickTo)
 import System.Exit (exitFailure)
 import System.Environment (getArgs)
 
@@ -21,7 +21,7 @@ ui s = [shgif s]
 eHandler s (VtyEvent (Vty.EvKey (Vty.KChar 'q') [])) = halt s
 eHandler s (VtyEvent (Vty.EvKey (Vty.KChar k) []))
     | k `elem` "0123456789" = do
-        sgf <- liftIO $ setShgifTickTo (read [k]) s
+        sgf <- liftIO $ setTickTo (read [k]) s
         continue sgf
     | otherwise             = continue s
 eHandler s _ = continue s

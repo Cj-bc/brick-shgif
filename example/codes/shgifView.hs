@@ -11,7 +11,7 @@ import Brick
 import Brick.Extensions.Shgif.Events (TickEvent(..), mainWithTick)
 import Brick.Extensions.Shgif.Widgets (shgif)
 import Shgif.Type (Shgif(..))
-import Shgif.Updater (updateShgif)
+import Shgif.Updater (updateNormal)
 import Shgif.Loader (fromFile)
 
 type AppState = Shgif
@@ -30,7 +30,7 @@ ui s = [shgif s]
 
 eHandler :: AppState -> BrickEvent Name TickEvent -> EventM Name (Next AppState)
 eHandler s (VtyEvent (Vty.EvKey (Vty.KChar 'q') [])) = halt s
-eHandler s (AppEvent Tick)  = liftIO (updateShgif s) >>= continue
+eHandler s (AppEvent Tick)  = liftIO (updateNormal s) >>= continue
 eHandler s _ = continue s
 
 main :: IO ()

@@ -30,6 +30,7 @@ dependencies:
 - vector
 - text
 - unordered-containers
+- linear
 
 library:
   source-dirs: src

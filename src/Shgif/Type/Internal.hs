@@ -23,6 +23,7 @@ import Data.HashMap.Lazy ((!))
 import qualified Data.Vector as V
 import Data.Text (unpack, splitOn, Text)
 import Data.Maybe (fromMaybe)
+import Linear.V2 (V2(..))
 
 import GHC.Generics (Generic)
 import Tart.Canvas (Canvas, canvasFromText, newCanvas)
@@ -135,6 +136,17 @@ parseTimeStamp = withObject "Frame" $ \f -> timeStamp
 parseContents :: Value -> Parser [String]
 parseContents = withText "Contents" (return . tail . lines . unpack)
 -- }}}
+
+-- | Container
+--
+-- Save multiple 'Shgif's with coordinate offset.
+--
+-- It can sync Tick of all Shgifs contained.
+data Container = Container { _syncedTick :: Maybe Int           -- ^ synced Tick value. If 'Nothing', it won't sync
+                           , _shgifs     :: [(V2 Int, Shgif)]   -- ^ pair of (Offset, Shgif).
+                           }
+makeLenses ''Container
+
 
 
 -- | Convert 'Shgif' into 'Tart.Canvas' datatype

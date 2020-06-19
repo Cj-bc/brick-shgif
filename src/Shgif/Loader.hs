@@ -83,7 +83,7 @@ fromTartFile ix tartFile = let cs  = sortedCanvases (tartFileCanvasOrder tartFil
 --
 -- This only support 'Page' format, because 'Tart.Canvas.Canvas' is Bitmap image.
 --
--- For __Not__ 'updateShgifTo' use cases:
+-- For __Not__ 'updateTo' use cases:
 -- Make sure to __duplicate the last Canvas__ so that it'll show up for more than 1 tick.
 --
 -- (If you don't, The last frame only appear for 1 tick. In most case, it's the same as invisible)

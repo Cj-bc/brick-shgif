@@ -109,13 +109,13 @@ main = do
 ### 4.  __Updater__ を呼ぶ
 
 `Shgif.Updater`内にある __Updater__ は、フレーム描画に使用する`Shgif`内部のTickカウンターを更新します。  
-型は`Shgif -> IO Shgif`なので、`EventM`モナド内から使うことができます。
+IOモナドに包まれているので、`EventM`モナド内から使うことができます。
 
 ```haskell
 -- eHandler is used `appHandleEvent` for `App`
 eHandler s (AppEvent Tick) = do
     let oldsgf = ... -- 現在のShgifをsから取り出す
-    newsgf <- liftIO (updateShgif oldsgf)
+    newsgf <- liftIO (updateNormal oldsgf)
     continue $ ... -- Shgifを新しい物に取り替えてcontinue
 ```
 
@@ -125,14 +125,14 @@ eHandler s (AppEvent Tick) = do
 
 | `function` | 反転再生 | ループ |
 |:-:|:-:|:-:|
-| `updateShgif` | No  | Yes |
-| `updateShgifNoLoop` | No  | No |
-| `updateShgifReversed` | Yes  | Yes |
-| `updateShgifReversedNoLoop` | Yes  | No |
+| `updateNormal` | No  | Yes |
+| `updateNoLoop` | No  | No |
+| `updateReversed` | Yes  | Yes |
+| `updateReversedNoLoop` | Yes  | No |
 
 #### 表示するフレームを操作する
 
-`updateShgifTo`は引数として目的のtick数を受け取り、そのtickに近づくようにshgif内部のtickを更新します。  
+`updateTo`は引数として目的のtick数を受け取り、そのtickに近づくようにshgif内部のtickを更新します。  
 もしも内部のtickと引数の数値が等しかった場合は何も更新しません。
 
 

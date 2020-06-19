@@ -34,10 +34,10 @@ import Control.Lens (over, set, (+~), (&), (^.), (.~), view)
 --
 -- Use this if you want to show animation only once.
 updateNoLoop :: Updater
-updateNoLoop shgif = update updateTick shgif
+updateNoLoop updatable = update updateTick updatable
     where
-        lastTimeStamp = getLastTimeStamp shgif
-        updateTick | (shgif^.getTick) <= lastTimeStamp = over getTick (+ 1)
+        lastTimeStamp = getLastTimeStamp updatable
+        updateTick | (updatable^.getTick) <= lastTimeStamp = over getTick (+ 1)
                    | otherwise                             = id
 
 
@@ -47,9 +47,9 @@ updateNoLoop shgif = update updateTick shgif
 --
 -- Use this if you want to show reversed animation for only once.
 updateReversedNoLoop :: Updater
-updateReversedNoLoop shgif = update updateTick shgif
+updateReversedNoLoop updatable = update updateTick updatable
     where
-        updateTick | 0 < (shgif^.getTick) = over getTick (subtract 1)
+        updateTick | 0 < (updatable^.getTick) = over getTick (subtract 1)
                    | otherwise                = id
 
 
@@ -59,29 +59,29 @@ updateReversedNoLoop shgif = update updateTick shgif
 --
 -- Use this if you want to show reversed animation.
 updateReversed :: Updater
-updateReversed shgif = update updateTick shgif
+updateReversed updatable = update updateTick updatable
     where
-        lastTimeStamp = getLastTimeStamp shgif
+        lastTimeStamp = getLastTimeStamp updatable
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | val < 0   = max
-        updateTick = set getTick (repeat lastTimeStamp $ (shgif^.getTick) - 1)
+        updateTick = set getTick (repeat lastTimeStamp $ (updatable^.getTick) - 1)
 
 -- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
 updateNormal :: Updater
-updateNormal shgif = update updateTick shgif
+updateNormal updatable = update updateTick updatable
     where
-        lastTimeStamp = getLastTimeStamp shgif
+        lastTimeStamp = getLastTimeStamp updatable
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | max < val = 0
                        | otherwise = val
-        updateTick = set getTick (repeat lastTimeStamp $ (shgif^.getTick) + 1)
+        updateTick = set getTick (repeat lastTimeStamp $ (updatable^.getTick) + 1)
 
 
 -- | Update 'Shgif''s internal tick state to make it closer to given tick
 updateTo :: Int -> Updater
-updateTo tick shgif  = update (getTick+~tickToAdd) shgif
+updateTo tick updatable  = update (getTick+~tickToAdd) updatable
     where
-        tickToAdd = case (shgif^.getTick) `compare` tick of
+        tickToAdd = case (updatable^.getTick) `compare` tick of
                         LT -> 1
                         EQ -> 0
                         GT -> -1

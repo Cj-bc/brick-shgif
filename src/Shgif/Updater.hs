@@ -28,7 +28,7 @@ module Shgif.Updater (
 import Shgif.Type.Internal
 import Control.Lens (over, set, (+~), (&), (^.), (.~), view)
 
--- | Update 'Shgif''s internal tick state, which will affect frame rendering.
+-- | Update internal tick state, which will affect frame rendering.
 --
 -- This function __won't loop__ gif.
 --
@@ -41,7 +41,7 @@ updateNoLoop updatable = update updateTick updatable
                    | otherwise                             = id
 
 
--- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
+-- | Update internal tick state, which will affect frame rendering.  
 --
 -- This function reverse and __won't loop__ gif.
 --
@@ -53,7 +53,7 @@ updateReversedNoLoop updatable = update updateTick updatable
                    | otherwise                = id
 
 
--- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
+-- | Update internal tick state, which will affect frame rendering.  
 --
 -- This function reverse gif.
 --
@@ -66,7 +66,7 @@ updateReversed updatable = update updateTick updatable
         repeat max val | val < 0   = max
         updateTick = set getTick (repeat lastTimeStamp $ (updatable^.getTick) - 1)
 
--- | Update 'Shgif''s internal tick state, which will affect frame rendering.  
+-- | Update internal tick state, which will affect frame rendering.  
 updateNormal :: Updater
 updateNormal updatable = update updateTick updatable
     where
@@ -77,7 +77,7 @@ updateNormal updatable = update updateTick updatable
         updateTick = set getTick (repeat lastTimeStamp $ (updatable^.getTick) + 1)
 
 
--- | Update 'Shgif''s internal tick state to make it closer to given tick
+-- | Update internal tick state to make it closer to given tick
 updateTo :: Int -> Updater
 updateTo tick updatable  = update (getTick+~tickToAdd) updatable
     where
@@ -87,6 +87,6 @@ updateTo tick updatable  = update (getTick+~tickToAdd) updatable
                         GT -> -1
 
 
--- | Set 'Shgif''s internal tick state to given tick.
+-- | Set internal tick state to given tick.
 setTickTo :: Int -> Updater
 setTickTo tick = update (getTick.~tick)

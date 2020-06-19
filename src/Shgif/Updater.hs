@@ -65,7 +65,7 @@ updateReversed updatable = update updateTick updatable
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeatReversed max val | val < 0   = max
                                | otherwise = val
-        updateTick = repeatReversed lastTimeStamp . (- 1)
+        updateTick = repeatReversed lastTimeStamp . (subtract 1)
 
 -- | Update internal tick state, which will affect frame rendering.  
 updateNormal :: Updater

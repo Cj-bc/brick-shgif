@@ -14,7 +14,7 @@ This module aims to hide some 'Only internal use' functions (like Lens)
 from 'Shgif.Type'.
 -}
 module Shgif.Type.Internal where
-import Control.Lens (makeLenses, (.~), (^.), (&), (+~), Lens, set, view, over)
+import Control.Lens (makeLenses, (.~), (^.), (&), (+~), Lens, set, view, over, _2, each)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , withText
                  , Parser(..), Value(..)
@@ -147,6 +147,17 @@ data Container = Container { _syncedTick :: Maybe Int           -- ^ synced Tick
                            }
 makeLenses ''Container
 
+instance Updatable Container where
+    update updateTick c = (shgifs . each . _2) (update updateTick) c
+    -- | We use the latest timestamp in all all shgif data for Container's last Time stamp.
+    -- By doing this,
+    --
+    -- If we use the 'smallest' number as last time stamp,
+    -- some frames could be cut off.
+    --
+    -- If we don't decide last time stamp for the Container, each 'Shgif' in Container will be updated independently,
+    -- resulting in non-synced animation.
+    getLastTimeStamp = maximum . map (getLastTimeStamp . snd) . view shgifs
 
 
 -- | Convert 'Shgif' into 'Tart.Canvas' datatype

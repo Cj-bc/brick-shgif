@@ -165,7 +165,8 @@ parseContents = withText "Contents" (return . tail . lines . unpack)
 --
 -- - 各Shgifへ 'Updater' を指定して適用できるようにする
 data Container = Container { _syncedTick :: Maybe Int           -- ^ synced Tick value. If 'Nothing', it won't sync
-                           , _shgifs     :: [(V2 Int, Shgif)]   -- ^ pair of (Offset, Shgif).
+                           , _shgifs     :: [((Int, Int), Shgif)]   -- ^ pair of (Offset, Shgif).
+                           , _rendered   :: Canvas              -- ^ Rendered 'Canvas'
                            }
 makeLenses ''Container
 

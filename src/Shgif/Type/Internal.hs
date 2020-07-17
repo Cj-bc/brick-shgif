@@ -38,8 +38,9 @@ class Updatable a where
     -- | The core for all 'Updater'
     -- Implement this, and you can use all 'Updater' defined in 'Shgif.Updater'
     --
-    -- First argument is a function which takes current tick and return updated tick.
-    -- Because of the instances that hold multiple ticks, I keep it to update only one tick
+    --
+    -- First argument is a function to update Updatable tick.
+    -- This function takes Current Tick value
     update :: (Int -> Int) -> a -> IO a
 
     -- | Get the last timestamp in 'a'
@@ -194,7 +195,6 @@ instance Updatable Container where
             updateRendered c' = rendered (const . mergeToBigCanvas . view shgifs $ c') c'
 
     -- | We use the latest timestamp in all all shgif data for Container's last Time stamp.
-    -- By doing this,
     --
     -- If we use the 'smallest' number as last time stamp,
     -- some frames could be cut off.
@@ -204,13 +204,20 @@ instance Updatable Container where
     getLastTimeStamp = maximum . map (getLastTimeStamp . snd) . view shgifs
 
 
+instance Updatable Shgif where
+    update updateTick shgif = do
+        let updated = over currentTick updateTick shgif
+        newC <- shgifToCanvas updated
+        return $ set canvas (Just newC) updated
+    getLastTimeStamp = maximum . map fst . view shgifData
+
 -- Helper functions {{{
 
 
 -- | Convert 'Shgif' into 'Tart.Canvas' datatype
 -- This function only determine which frame to render, and pass it to 'canvasFromText'
 shgifToCanvas :: Shgif -> IO Canvas
-shgifToCanvas (Shgif _ _ _ w h tick ds _) = canvasFromText $ unlines $ map (addWidthPadding w) $ addHeightPadding  h frame
+shgifToCanvas (Shgif _ _ _ w h tick ds _) = canvasFromText . unlines . map (addWidthPadding w) $ addHeightPadding  h frame
     where
         currentFrame t = fromMaybe (currentFrame (t-1)) $ lookup t ds
         frame :: [String]
@@ -239,12 +246,6 @@ addInitialCanvas sgf = do
     return $ sgf&canvas.~(Just newC')
 
 
-instance Updatable Shgif where
-    update updateTick shgif = do
-        let updated = over currentTick updateTick shgif
-        newC <- shgifToCanvas updated
-        return $ set canvas (Just newC) updated
-    getLastTimeStamp = maximum . map fst . view shgifData
 
 -- Those functions below are borrowed from:
 --  https://github.com/Cj-bc/faclig/blob/master/src/Graphics/Asciiart/Faclig/Types.hs#L106-L138

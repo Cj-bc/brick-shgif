@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Haskell Package Versioning policy](https://pvp.haskell.org/).
 
 ## Unreleased changes
+
+### Added
 - Add 'Container'
 - Add 'Updatable' instance for Container
 - Add 'updateContainer' to update Container with different updater for each Shgif
@@ -31,6 +33,7 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 - Update shgif examples to support shgif 1.0.0
 - Rename all functions in 'Shgif.Updater' to generalized name
 - Update all examples to use new Updater
+
 
 ## [1.4.1.0] - 2020-03-02
 

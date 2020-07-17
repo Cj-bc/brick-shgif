@@ -26,7 +26,7 @@ module Shgif.Updater (
     , setTickTo
 ) where
 import Shgif.Type.Internal
-import Control.Lens (over, set, (+~), (&), (^.), (.~), view)
+import Control.Lens (over, set, (+~), (&), (^.), (.~), view, _2)
 
 -- | Update internal tick state, which will affect frame rendering.
 --
@@ -92,3 +92,13 @@ updateTo tick updatable  = update updateTick updatable
 -- | Set internal tick state to given tick.
 setTickTo :: Int -> Updater
 setTickTo tick = update (const tick)
+
+
+-- | Specialized Updater for 'Container'
+--
+-- Update each 'Shgif's with different Updaters
+--
+-- If you want to update Container synchronicity, use other 'Updater's
+-- directly. They will update all Shgifs with same method.
+updateContainer :: [Shgif -> IO Shgif] -> Container -> IO Container
+updateContainer updaters container = shgifs (sequence . zipWith (\f v -> _2 f v) updaters) container

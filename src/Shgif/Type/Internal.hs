@@ -138,17 +138,32 @@ parseContents = withText "Contents" (return . tail . lines . unpack)
 -- }}}
 
 -- | Container
---
--- Save multiple 'Shgif's with coordinate offset.
---
--- It can sync Tick of all Shgifs contained.
 data Container = Container { _syncedTick :: Maybe Int           -- ^ synced Tick value. If 'Nothing', it won't sync
                            , _shgifs     :: [(V2 Int, Shgif)]   -- ^ pair of (Offset, Shgif).
                            }
 makeLenses ''Container
 
 instance Updatable Container where
-    update updateTick c = (shgifs . each . _2) (update updateTick) c
+    -- |
+    --
+    -- If Tick is synced, update it and apply it to all 'Shgif's.
+    -- If not, call update function for each 'Shgif'
+    --
+    -- __This doesn't support independent update__
+    --
+    -- Tickが同期されていたら、同期されたTickを更新しそれを各 'Shgif' に反映する。
+    -- されてないかったら、各 'Shgif' にupdateを呼び出す
+    --
+    -- __バラバラに動かす処理はしないことに注意__
+    --
+    update updateTick c = case (c^.syncedTick) of
+                Just t  -> do
+                    let t'               = updateTick t
+                        updateSyncedTick = syncedTick (const . return . Just $ t')
+                        updateEachShgif  = (shgifs . each . _2) (update (const t'))
+                    updateEachShgif =<< updateSyncedTick c
+                Nothing -> (shgifs . each . _2) (update updateTick) c
+
     -- | We use the latest timestamp in all all shgif data for Container's last Time stamp.
     -- By doing this,
     --

@@ -7,6 +7,7 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 ## Unreleased changes
 - Add 'Updatable' instance for Container
 - Add 'updateContainer' to update Container with different updater for each Shgif
+- 'Shgif.Type' will export Lenses for Container
 
 
 ## [1.5.0.1] - 2020-06-19

@@ -24,6 +24,11 @@ module Shgif.Type (
     , canvas
     , width
     , height
+
+    -- * Lenses
+    , syncedTick
+    , shgifs
+    , rendered
 ) where
 
 import Shgif.Type.Internal

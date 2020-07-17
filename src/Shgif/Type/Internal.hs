@@ -26,7 +26,7 @@ import Data.Maybe (fromMaybe)
 import Linear.V2 (V2(..))
 
 import GHC.Generics (Generic)
-import Tart.Canvas (Canvas, canvasFromText, newCanvas)
+import Tart.Canvas (Canvas, canvasFromText, newCanvas, canvasGetPixel, canvasSetPixel, canvasSize)
 
 version = (1, 0, 0)
 
@@ -188,8 +188,10 @@ instance Updatable Container where
                     let t'               = updateTick t
                         updateSyncedTick = syncedTick (const . return . Just $ t')
                         updateEachShgif  = (shgifs . each . _2) (update (const t'))
-                    updateEachShgif =<< updateSyncedTick c
-                Nothing -> (shgifs . each . _2) (update updateTick) c
+                    updateSyncedTick c >>= updateEachShgif >>= updateRendered
+                Nothing -> (shgifs . each . _2) (update updateTick) c >>= updateRendered
+        where
+            updateRendered c' = rendered (const . mergeToBigCanvas . view shgifs $ c') c'
 
     -- | We use the latest timestamp in all all shgif data for Container's last Time stamp.
     -- By doing this,
@@ -200,6 +202,9 @@ instance Updatable Container where
     -- If we don't decide last time stamp for the Container, each 'Shgif' in Container will be updated independently,
     -- resulting in non-synced animation.
     getLastTimeStamp = maximum . map (getLastTimeStamp . snd) . view shgifs
+
+
+-- Helper functions {{{
 
 
 -- | Convert 'Shgif' into 'Tart.Canvas' datatype
@@ -240,3 +245,42 @@ instance Updatable Shgif where
         newC <- shgifToCanvas updated
         return $ set canvas (Just newC) updated
     getLastTimeStamp = maximum . map fst . view shgifData
+
+-- Those functions below are borrowed from:
+--  https://github.com/Cj-bc/faclig/blob/master/src/Graphics/Asciiart/Faclig/Types.hs#L106-L138
+
+-- | Render Canvas into other canvas
+plotToCanvas :: (Int, Int) -> Canvas -> Canvas -> IO Canvas
+plotToCanvas (dw, dh) bc c = do
+    let (w, h) = canvasSize c
+    write [(w', h') | w' <- [0..w-1], h' <- [0..h-1]] bc
+    where
+        write :: [(Int, Int)] -> Canvas -> IO Canvas
+        write [] bc'         = return bc'
+        write ((w, h):x) bc' = do
+            let (ch, attr) = canvasGetPixel c (w, h)
+            case ch of
+                ' ' -> write x bc
+                _   -> do
+                  newC <- canvasSetPixel bc (w + dw, h + dh) ch attr
+                  write x newC
+
+
+
+-- | Merge and render all Shgifs into one Canvas
+mergeToBigCanvas :: [((Int, Int), Shgif)] -> IO Canvas
+mergeToBigCanvas ss = do
+    emptyCanvas <- newCanvas (w, h)
+    write ss emptyCanvas
+    where
+        w = maximum $ fmap (\((w',_), s) -> s^.width + w') ss
+        h = maximum $ fmap (\((_,h'), s) -> s^.height + h') ss
+
+        -- | Write Canvases one after another
+        write :: [((Int, Int), Shgif)] -> Canvas -> IO Canvas
+        write [] c         = return c
+        write ((p,s):x) bc = do
+            shgifC <- shgifToCanvas s
+            newC <- plotToCanvas p bc shgifC
+            write x newC
+-- }}}

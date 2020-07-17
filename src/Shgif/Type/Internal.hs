@@ -138,6 +138,32 @@ parseContents = withText "Contents" (return . tail . lines . unpack)
 -- }}}
 
 -- | Container
+--
+-- Save multiple 'Shgif's with coordinate offset.
+--
+-- Object of Container:
+--
+-- - Move multiple 'Shgif's synchronicity, keeping relative position
+--
+-- - Move multiple 'Shgif's independently, keeping relative position
+--
+-- Solution for each:
+--
+-- - Use the same Tick to move all 'Shgif's
+--
+-- - Let user to apply different 'Updater' to each 'Shgif'
+--
+-- コンテナでやりたいこと:
+--
+-- - 複数のShgifの位置関係を保ったまま、同時に動かしたい
+--
+-- - 複数のShgifの位置関係を保ったまま、バラバラに動かしたい
+--
+-- それぞれのソリューション:
+--
+-- - Shgifに同じTickを適用することで、同時に動かす
+--
+-- - 各Shgifへ 'Updater' を指定して適用できるようにする
 data Container = Container { _syncedTick :: Maybe Int           -- ^ synced Tick value. If 'Nothing', it won't sync
                            , _shgifs     :: [(V2 Int, Shgif)]   -- ^ pair of (Offset, Shgif).
                            }

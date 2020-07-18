@@ -167,9 +167,10 @@ parseContents = withText "Contents" (return . tail . lines . unpack)
 -- - 各Shgifへ 'Updater' を指定して適用できるようにする
 data Container = Container { _syncedTick :: Maybe Int           -- ^ synced Tick value. If 'Nothing', it won't sync
                            , _shgifs     :: [((Int, Int), Shgif)]   -- ^ pair of (Offset, Shgif).
-                           , _rendered   :: Canvas              -- ^ Rendered 'Canvas'
+                           , _rendered   :: Maybe Canvas              -- ^ Rendered 'Canvas'
                            }
 makeLenses ''Container
+
 
 instance Updatable Container where
     -- |
@@ -192,7 +193,7 @@ instance Updatable Container where
                     updateSyncedTick c >>= updateEachShgif >>= updateRendered
                 Nothing -> (shgifs . each . _2) (update updateTick) c >>= updateRendered
         where
-            updateRendered c' = rendered (const . mergeToBigCanvas . view shgifs $ c') c'
+            updateRendered c' = rendered (const $ Just <$> (mergeToBigCanvas . view shgifs $ c')) c'
 
     -- | We use the latest timestamp in all all shgif data for Container's last Time stamp.
     --

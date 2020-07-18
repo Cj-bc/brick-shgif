@@ -52,4 +52,6 @@ canvas c = raw $ canvasLayersToImage c
 
 -- | Widget to show 'Container'
 container :: Container -> Widget n
-container c = canvas [c^.rendered]
+container c = case c^.rendered of
+                Nothing -> emptyWidget
+                Just c' -> canvas [c']

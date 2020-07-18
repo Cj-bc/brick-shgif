@@ -168,6 +168,8 @@ parseContents = withText "Contents" (return . tail . lines . unpack)
 data Container = Container { _syncedTick :: Maybe Int           -- ^ synced Tick value. If 'Nothing', it won't sync
                            , _shgifs     :: [((Int, Int), Shgif)]   -- ^ pair of (Offset, Shgif).
                            , _rendered   :: Maybe Canvas              -- ^ Rendered 'Canvas'
+                           , _containerAuthor   :: Maybe Text       -- ^ Author of the Container
+                           , _containerTitle    :: Maybe Text       -- ^ Title of the Container
                            }
 makeLenses ''Container
 

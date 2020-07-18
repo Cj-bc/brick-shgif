@@ -31,6 +31,7 @@ dependencies:
 - text
 - unordered-containers
 - linear
+- megaparsec
 
 library:
   source-dirs: src

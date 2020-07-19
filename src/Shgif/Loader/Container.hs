@@ -11,7 +11,7 @@ module Shgif.Loader.Container (
   , fromFiles
 
 ) where
-import Control.Monad (forM)
+import Control.Monad (forM, when)
 import Data.Yaml (FromJSON(..), withObject, withArray, withText
                  , Parser, Value, ParseException
                  , (.:), (.:?)
@@ -22,6 +22,7 @@ import Data.Void (Void)
 import qualified Data.Vector as V
 import qualified Data.Text as T
 import Shgif.Type (Shgif, Container(..))
+import Shgif.Type.Internal (containerVersion)
 import qualified Shgif.Loader as ShgifLoader
 import qualified Text.Megaparsec as M
 import qualified Text.Megaparsec.Char as MC
@@ -40,13 +41,33 @@ data ContainerFile = ContainerFile { author     :: Maybe T.Text
 instance FromJSON ContainerFile where
     parseJSON = do
         ctn <- parseJSON'
-        -- TODO: VALIDATE VERSION HERE
-        return ctn
+        validateVersion ctn
         where
             parseJSON' = withObject "Container" $ \v -> ContainerFile
                 <$> v .:? "author"
                 <*> v .:? "title"
                 <*> parseData (v ! "data")
+
+
+-- | This is temporary borrowed from Shgif.Type.Internal
+validateVersion sgf = withObject "Container" $ \v -> do
+                            let getMajorV (a, _, _) = a
+                                getMinorV (_, a, _) = a
+                                parseVersion :: Value -> Parser (Int, Int, Int)
+                                parseVersion = withText "version" $ return . mkTriple . take 3 . map (read . T.unpack) . T.split (== '.')
+                                    where
+                                        mkTriple (mej:min:patch:_) = (mej, min, patch)
+                                condition :: (Int, Int, Int) -> (Int, Int, Int) -> Bool
+                                condition lib file  = (getMajorV lib == getMajorV file)
+                                                      && (getMinorV lib >= getMinorV file)
+
+                            usedVersion <- parseVersion (v ! "version")
+                            if (condition containerVersion usedVersion)
+                            then sgf
+                            else fail . unlines $ ["Shgif format version mismatch. Major version should be the same."
+                                                  , "Supported version: " ++ (show containerVersion)
+                                                  , "Used version: " ++ (show usedVersion)
+                                                  ]
 
 -- | Parse data section
 parseData :: Value -> Parser [(Offset, FilePath)]
@@ -67,12 +88,10 @@ parseTuple' = do
     second <- M.manyTill MC.alphaNumChar (MC.char ')')
     return (read first, read second)
 
+
 -- Borrowed from:
 -- https://github.com/Cj-bc/faclig/blob/74db25231e262276d79ba09fc1c23072b7a087a3/src/Graphics/Asciiart/Faclig/Types/Internal.hs#L64-L66
-parseVersion :: Value -> Parser (Int, Int, Int)
-parseVersion = withText "version" $ return . mkTriple . take 3 . map (read . T.unpack) . T.split (== '.')
-    where
-        mkTriple (mej:min:patch:_) = (mej, min, patch)
+
 -- }}}
 
 fromFile :: FilePath -> IO (Either ParseException Container)

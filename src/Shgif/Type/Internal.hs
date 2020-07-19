@@ -29,6 +29,8 @@ import GHC.Generics (Generic)
 import Tart.Canvas (Canvas, canvasFromText, newCanvas, canvasGetPixel, canvasSetPixel, canvasSize)
 
 version = (1, 0, 0)
+containerVersion :: (Int, Int, Int)
+containerVersion = (0, 1, 0)
 
 
 -- | Mark Type as "Updatable"

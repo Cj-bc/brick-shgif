@@ -11,15 +11,21 @@ module Shgif.Loader.Container (
   , fromFiles
 
 ) where
+import Control.Monad (forM)
 import Data.Yaml (FromJSON(..), withObject, withArray, withText
-                 , Parser, Value, (.:), (.:?)
+                 , Parser, Value, (.:), (.:?), ParseException
+                 , decodeFileEither
+                 )
 import Data.HashMap.Lazy ((!))
 import Data.Void (Void)
 import qualified Data.Vector as V
 import qualified Data.Text as T
 import Shgif.Type (Shgif, Container(..))
+import qualified Shgif.Loader as ShgifLoader
 import qualified Text.Megaparsec as M
 import qualified Text.Megaparsec.Char as MC
+import System.Directory (withCurrentDirectory)
+import System.FilePath.Posix (takeDirectory)
 
 
 type Offset = (Int, Int)
@@ -68,3 +74,15 @@ parseVersion = withText "version" $ return . mkTriple . take 3 . map (read . T.u
         mkTriple (mej:min:patch:_) = (mej, min, patch)
 -- }}}
 
+fromFile :: FilePath -> IO (Either ParseException Container)
+fromFile fp = do
+    container <- (decodeFileEither fp :: IO (Either ParseException ContainerFile))
+    case container of
+        Left e -> return $ Left e
+        Right cf -> withCurrentDirectory (takeDirectory fp) $ do
+            shgifs <- forM (shgifFiles cf) $ \(o, sfp) -> do
+                          sgf <- ShgifLoader.fromFile sfp
+                          case sgf of
+                              Left e      -> return $ Left e
+                              Right sgf'  -> return $ Right (o, sgf')
+            return $ Container Nothing (author cf) (title cf) <$> sequence shgifs <*> return Nothing

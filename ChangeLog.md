@@ -11,7 +11,12 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 - Add 'Updatable' instance for Container
 - Add 'updateContainer' to update Container with different updater for each Shgif
 - 'Shgif.Type' will export Lenses for Container
+- Add 'Shgif.Loader.Container' module which exports loaders for Container
 - Add 'container' Brick widget
+- Dependency: directory, filepath
+
+### Removed
+- Removed Dependency from 'ShgifView' executable: filepath
 
 
 ## [1.5.0.1] - 2020-06-19

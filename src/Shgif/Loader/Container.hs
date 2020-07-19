@@ -86,3 +86,7 @@ fromFile fp = do
                               Left e      -> return $ Left e
                               Right sgf'  -> return $ Right (o, sgf')
             return $ Container Nothing (author cf) (title cf) <$> sequence shgifs <*> return Nothing
+
+
+fromFiles :: [FilePath] -> IO (Either ParseException [Container])
+fromFiles fps = mapM fromFile fps >>= return . sequence

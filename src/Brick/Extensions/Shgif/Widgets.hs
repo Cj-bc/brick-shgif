@@ -13,16 +13,13 @@ module Brick.Extensions.Shgif.Widgets
   shgif
 , shgifs
 
--- * Widget for Container
-, container
-
 -- * other
 , canvas
 ) where
 
 import Control.Lens ((^.), view)
 import Data.Maybe (fromJust, isNothing)
-import Shgif.Type (Shgif, shgifToCanvas, Container, rendered)
+import Shgif.Type (Shgif, shgifToCanvas)
 import qualified Shgif.Type as T
 import qualified Graphics.Vty as Vty
 import Brick.Types (Widget(..), Size(..))
@@ -48,10 +45,3 @@ shgifs = canvas . mconcat . fmap (maybe [] pure . view T.canvas)
 -- | Widget to show '[Tart.Canvas]'
 canvas :: [Canvas] -> Widget n
 canvas c = raw $ canvasLayersToImage c
-
-
--- | Widget to show 'Container'
-container :: Container -> Widget n
-container c = case c^.rendered of
-                Nothing -> emptyWidget
-                Just c' -> canvas [c']

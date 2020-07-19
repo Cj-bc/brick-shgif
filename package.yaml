@@ -30,10 +30,6 @@ dependencies:
 - vector
 - text
 - unordered-containers
-- linear
-- megaparsec
-- directory
-- filepath
 
 library:
   source-dirs: src
@@ -50,6 +46,7 @@ executables:
     - brick-shgif
     - optparse-applicative
     - fsnotify
+    - filepath
 
 tests:
   brick-shgif-test:

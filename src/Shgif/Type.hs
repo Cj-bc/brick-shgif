@@ -16,7 +16,6 @@ module Shgif.Type (
     , Shgif(..)
     , TimeStamp
     , Updater
-    , Container(..)
     , Updatable
 
     -- * Small functions for Shgif
@@ -24,11 +23,6 @@ module Shgif.Type (
     , canvas
     , width
     , height
-
-    -- * Lenses
-    , syncedTick
-    , shgifs
-    , rendered
 ) where
 
 import Shgif.Type.Internal

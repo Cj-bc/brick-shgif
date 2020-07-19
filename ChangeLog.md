@@ -9,6 +9,7 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 ### Added
 - Add 'Container'
 - Add 'Updatable' instance for Container
+- Add 'FromJSON' instance for Container
 - Add 'updateContainer' to update Container with different updater for each Shgif
 - 'Shgif.Type' will export Lenses for Container
 - Add 'Shgif.Loader.Container' module which exports loaders for Container

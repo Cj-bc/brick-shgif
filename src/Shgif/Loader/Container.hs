@@ -12,7 +12,7 @@ module Shgif.Loader.Container (
 
 ) where
 import Data.Yaml (FromJSON(..), withObject, withArray, withText
-                 , Parser, Value, (.:))
+                 , Parser, Value, (.:), (.:?)
 import Data.HashMap.Lazy ((!))
 import Data.Void (Void)
 import qualified Data.Vector as V
@@ -23,8 +23,8 @@ import qualified Text.Megaparsec.Char as MC
 
 
 type Offset = (Int, Int)
-data ContainerFile = ContainerFile { author     :: String
-                                   , title      :: String
+data ContainerFile = ContainerFile { author     :: Maybe T.Text
+                                   , title      :: Maybe T.Text
                                    , shgifFiles :: [(Offset, FilePath)]
                                    }
 
@@ -37,8 +37,8 @@ instance FromJSON ContainerFile where
         return ctn
         where
             parseJSON' = withObject "Container" $ \v -> ContainerFile
-                <$> v .: "author"
-                <*> v .: "title"
+                <$> v .:? "author"
+                <*> v .:? "title"
                 <*> parseData (v ! "data")
 
 -- | Parse data section

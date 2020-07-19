@@ -13,7 +13,8 @@ module Shgif.Loader.Container (
 ) where
 import Control.Monad (forM)
 import Data.Yaml (FromJSON(..), withObject, withArray, withText
-                 , Parser, Value, (.:), (.:?), ParseException
+                 , Parser, Value, ParseException
+                 , (.:), (.:?)
                  , decodeFileEither
                  )
 import Data.HashMap.Lazy ((!))

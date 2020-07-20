@@ -28,6 +28,12 @@ module Shgif.Updater (
 import Shgif.Type.Internal
 import Control.Lens (over, set, (+~), (&), (^.), (.~), view, _2)
 
+
+update updateTick shgif = do
+  newC <- shgifToCanvas $ updateTick shgif
+  return $ set canvas (Just newC) $ updateTick shgif
+
+
 -- | Update internal tick state, which will affect frame rendering.
 --
 -- This function __won't loop__ gif.

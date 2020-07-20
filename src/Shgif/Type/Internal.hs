@@ -30,22 +30,6 @@ import Tart.Canvas (Canvas, canvasFromText, newCanvas)
 version = (1, 0, 0)
 
 
--- | Mark Type as "Updatable"
---
--- Instances are able to use 'Updater'
-class Updatable a where
-    -- | The core for all 'Updater'
-    -- Implement this, and you can use all 'Updater' defined in 'Shgif.Updater'
-    --
-    --
-    -- First argument is a function to update Updatable tick.
-    -- This function takes Current Tick value
-    update :: (Int -> Int) -> a -> IO a
-
-    -- | Get the last timestamp in 'a'
-    getLastTimeStamp :: a -> Int
-
-
 -- | Format  of shgif file
 --
 -- Currently only Page is suported
@@ -61,7 +45,7 @@ type TimeStamp = (Int, [String])
 -- | 'Shgif.Updater'
 --
 -- Updater takes 'Updatable' value and return updated result.
-type Updater = forall a. Updatable a => a -> IO a
+type Updater = Shgif -> IO Shgif
 
 -- | The main datatype that holds Shgif data
 data Shgif = Shgif { _title     :: String
@@ -168,11 +152,3 @@ addInitialCanvas sgf = do
     newC <- newCanvas (sgf^.width, sgf^.height) -- XXXX: is it correct order? (width, height)
     newC' <- shgifToCanvas $ sgf&canvas.~(Just newC)
     return $ sgf&canvas.~(Just newC')
-
-
-instance Updatable Shgif where
-    update updateTick shgif = do
-        newC <- shgifToCanvas $ updateTick shgif
-        return $ set canvas (Just newC) $ updateTick shgif
-    getTick = currentTick
-    getLastTimeStamp = maximum . map fst . view shgifData

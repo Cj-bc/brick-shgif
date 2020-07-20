@@ -57,6 +57,12 @@ data Shgif = Shgif { _title     :: String
                    , _shgifData :: [TimeStamp]  -- ^ [(Time, String to write)]
                    , _canvas :: Maybe Canvas    -- ^ the 'Tart.Canvas' which will be rendered
                     }
+             | Container {
+                     _title     :: String
+                   , _author    :: String
+                   , _shgifs    :: [((Int, Int), Shgif)]
+                   , _rendered  :: Maybe Canvas
+                   }
 
 makeLenses ''Shgif
 

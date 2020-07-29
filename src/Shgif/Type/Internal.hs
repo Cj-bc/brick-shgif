@@ -14,7 +14,7 @@ This module aims to hide some 'Only internal use' functions (like Lens)
 from 'Shgif.Type'.
 -}
 module Shgif.Type.Internal where
-import Control.Lens (makeLenses, (.~), (^.), (&), (+~), Lens, set, view)
+import Control.Lens (makeLenses, makePrisms, (.~), (^.), (&), (+~), Lens, set, view)
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , withText
                  , Parser(..), Value(..)
@@ -64,6 +64,7 @@ data Shgif = Shgif { _title     :: String
                    , _rendered  :: Maybe Canvas
                    }
 
+makePrisms ''Shgif
 makeLenses ''Shgif
 
 instance FromJSON Format

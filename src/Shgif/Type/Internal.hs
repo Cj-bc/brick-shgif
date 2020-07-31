@@ -15,6 +15,7 @@ from 'Shgif.Type'.
 -}
 module Shgif.Type.Internal where
 import Control.Lens (makeLenses, makePrisms, (.~), (^.), (&), (+~), Lens, set, view)
+import Control.Applicative ((<|>))
 import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
                  , withText
                  , Parser(..), Value(..)
@@ -69,48 +70,60 @@ makeLenses ''Shgif
 
 instance FromJSON Format
 
-
 -- instance FromJSON Shgif {{{
 instance FromJSON Shgif where
   parseJSON = do
-      sgf <- parseJSON'
+      sgf <- \a -> parseShgif a <|> parseContainer a
       validateVersion sgf
-    where
-        -- | Validate Shgif format version and fail if it's not supported.
-        -- If it's supported, do nothing
-        --
-        -- Supported version is:
-        --
-        -- - The same major version
-        -- - The same or smaller minor version
-        validateVersion sgf = withObject "Shgif" $ \v -> do
-                            let getMajorV (a, _, _) = a
-                                getMinorV (_, a, _) = a
-                                parseVersion        = withText "version" $ \v -> do
-                                                        let versions = map (read . unpack) $ splitOn (".") v
-                                                        if (length versions /= 3)
-                                                          then fail "Unsupported version format"
-                                                          else return (versions !! 0, versions !! 1, versions !! 2)
-                                condition lib file  = (getMajorV lib == getMajorV file)
-                                                      && (getMinorV lib >= getMinorV file)
 
-                            usedVersion <- parseVersion (v ! "version")
-                            if (condition version usedVersion)
-                              then sgf
-                              else fail . unlines $ ["Shgif format version mismatch. Major version should be the same."
-                                                    , "Supported version: " ++ (show version)
-                                                    , "Used version: " ++ (show usedVersion)
-                                                    ]
+-- | Validate Shgif format version and fail if it's not supported.
+-- If it's supported, do nothing
+--
+-- Supported version is:
+--
+-- - The same major version
+-- - The same or smaller minor version
+validateVersion sgf = withObject "Shgif" $ \v -> do
+                    let getMajorV (a, _, _) = a
+                        getMinorV (_, a, _) = a
+                        parseVersion        = withText "version" $ \v -> do
+                                                let versions = map (read . unpack) $ splitOn (".") v
+                                                if (length versions /= 3)
+                                                  then fail "Unsupported version format"
+                                                  else return (versions !! 0, versions !! 1, versions !! 2)
+                        condition lib file  = (getMajorV lib == getMajorV file)
+                                              && (getMinorV lib >= getMinorV file)
 
-        parseJSON' = withObject "Shgif" $ \v -> Shgif
-                        <$> v .: "title"
-                        <*> v .: "author"
-                        <*> v .: "format"
-                        <*> v .: "width"
-                        <*> v .: "height"
-                        <*> return 0
-                        <*> parseFrame (v ! "data")
-                        <*> return Nothing
+                    usedVersion <- parseVersion (v ! "version")
+                    if (condition version usedVersion)
+                      then sgf
+                      else fail . unlines $ ["Shgif format version mismatch. Major version should be the same."
+                                            , "Supported version: " ++ (show version)
+                                            , "Used version: " ++ (show usedVersion)
+                                            ]
+
+-- Sub parsers {{{2
+parseShgif :: Value -> Parser Shgif
+parseShgif = withObject "Shgif" $ \v -> Shgif
+                <$> v .: "title"
+                <*> v .: "author"
+                <*> v .: "format"
+                <*> v .: "width"
+                <*> v .: "height"
+                <*> return 0
+                <*> parseFrame (v ! "data")
+                <*> return Nothing
+
+parseContainer :: Value -> Parser Shgif
+parseContainer = withObject "Container" $ \v -> Container
+                <$> v .: "title"
+                <*> v .: "author"
+                <*> parseShgifs (v ! "data")
+                <*> return Nothing
+
+parseShgifs :: Value -> Parser [((Int, Int), Shgif)]
+parseShgifs = withArray "data" $ \a -> undefined
+
 
 parseFrame :: Value -> Parser [TimeStamp]
 parseFrame = withArray "data" $ \a -> sequence $ V.toList $ V.map parseTimeStamp a
@@ -126,6 +139,7 @@ parseTimeStamp = withObject "Frame" $ \f -> timeStamp
 
 parseContents :: Value -> Parser [String]
 parseContents = withText "Contents" (return . tail . lines . unpack)
+-- }}}
 -- }}}
 
 

@@ -22,6 +22,8 @@ module Shgif.Type (
     , canvas
     , width
     , height
+    , shgifWidth
+    , shgifHeight
 ) where
 
 import Shgif.Type.Internal

@@ -93,6 +93,7 @@ data Shgif = Shgif { _title     :: String
                    , _author    :: String
                    , _shgifs    :: [((Int, Int), Shgif)]
                    , _canvas  :: Maybe Canvas
+                   , _syncedThick :: Maybe Int
                    }
 
 makePrisms ''Shgif
@@ -150,6 +151,7 @@ parseContainer = withObject "Container" $ \v -> Container
                 <*> v .: "author"
                 <*> parseShgifs (v ! "data")
                 <*> return Nothing
+                <*> return Nothing
 
 parseShgifs :: Value -> Parser [((Int, Int), Shgif)]
 parseShgifs = withArray "data" $ \a -> undefined
@@ -178,7 +180,7 @@ parseContents = withText "Contents" (return . tail . lines . unpack)
 -- It is size required to render whole AA
 shgifSize :: Shgif -> (Int, Int)
 shgifSize sgf@(Shgif _ _ _ w h _ _ _) = (w, h)
-shgifSize c@(Container _ _ ss _) = foldl bothMax (0, 0) offsetList
+shgifSize c@(Container _ _ ss _ _) = foldl bothMax (0, 0) offsetList
     where
         bothMax (w, h) (w', h') = (max w w', max h h')
         offsetList = map fst ss
@@ -219,7 +221,7 @@ addInitialCanvas sgf = do
 --
 -- We can't use Canvas contained in Shgif, because this function aims to update it.
 shgifToCanvas :: Shgif -> IO Canvas
-shgifToCanvas (Container _ _ ss _)        = mergeToBigCanvas ss
+shgifToCanvas (Container _ _ ss _ _)      = mergeToBigCanvas ss
 shgifToCanvas (Shgif _ _ _ w h tick ds _) = canvasFromText $ unlines $ map (addWidthPadding w) $ addHeightPadding  h frame
     where
         currentFrame t = fromMaybe (currentFrame (t-1)) $ lookup t ds

@@ -29,7 +29,7 @@ import Tart.Canvas (Canvas(..), canvasLayersToImage)
 
 -- | Widget to show 'Shgif' file
 shgif :: Shgif -> Widget n
-shgif s | isNothing (s^.T.canvas) = raw $ Vty.charFill Vty.defAttr ' ' (s^.T.width) (s^.T.height)
+shgif s | isNothing (s^.T.canvas) = raw $ Vty.charFill Vty.defAttr ' ' (s^.T.shgifWidth) (s^.T.shgifHeight)
         | otherwise               = canvas [fromJust $ s^.T.canvas]
 
 

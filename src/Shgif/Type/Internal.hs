@@ -62,7 +62,7 @@ data Shgif = Shgif { _title     :: String
                      _title     :: String
                    , _author    :: String
                    , _shgifs    :: [((Int, Int), Shgif)]
-                   , _rendered  :: Maybe Canvas
+                   , _canvas  :: Maybe Canvas
                    }
 
 makePrisms ''Shgif

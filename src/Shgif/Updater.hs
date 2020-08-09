@@ -42,8 +42,8 @@ update updateTick shgif = do
 updateNoLoop :: Updater
 updateNoLoop updatable = update updateTick updatable
     where
-        lastTimeStamp = getLastTimeStamp updatable
-        updateTick i | i <= lastTimeStamp = i + 1
+        t = updatable^.lastTimeStamp
+        updateTick i | i <= t = i + 1
                      | otherwise          = i
 
 
@@ -67,22 +67,22 @@ updateReversedNoLoop updatable = update updateTick updatable
 updateReversed :: Updater
 updateReversed updatable = update updateTick updatable
     where
-        lastTimeStamp = getLastTimeStamp updatable
+        t = updatable^.lastTimeStamp
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeatReversed max val | val < 0   = max
                                | otherwise = val
-        updateTick = repeatReversed lastTimeStamp . (subtract 1)
+        updateTick = repeatReversed t . (subtract 1)
 
 -- | Update internal tick state, which will affect frame rendering.  
 updateNormal :: Updater
 updateNormal updatable = update updateTick updatable
     where
-        lastTimeStamp = getLastTimeStamp updatable
+        t = updatable^.lastTimeStamp
         -- https://docs.unity3d.com/ja/2019.2/ScriptReference/Mathf.Repeat.html
         repeat max val | max < val = 0
                        | otherwise = val
         updateTick :: Int -> Int
-        updateTick = repeat lastTimeStamp . (+ 1)
+        updateTick = repeat t . (+ 1)
 
 
 -- | Update internal tick state to make it closer to given tick

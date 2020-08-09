@@ -61,6 +61,33 @@ data Shgif = Shgif { _title     :: String
                    , _shgifData :: [TimeStamp]  -- ^ [(Time, String to write)]
                    , _canvas :: Maybe Canvas    -- ^ the 'Tart.Canvas' which will be rendered
                     }
+             -- | Container
+             -- 
+             -- Save multiple 'Shgif's with coordinate offset.
+             -- 
+             -- Object of Container:
+             -- 
+             -- - Move multiple 'Shgif's synchronicity, keeping relative position
+             --
+             -- - Move multiple 'Shgif's independently, keeping relative position
+             --
+             -- Solution for each:
+             --
+             -- - Use the same Tick to move all 'Shgif's
+             --
+             -- - Let user to apply different 'Updater' to each 'Shgif'
+             --
+             -- コンテナでやりたいこと:
+             --
+             -- - 複数のShgifの位置関係を保ったまま、同時に動かしたい
+             --
+             -- - 複数のShgifの位置関係を保ったまま、バラバラに動かしたい
+             --
+             -- それぞれのソリューション:
+             --
+             -- - Shgifに同じTickを適用することで、同時に動かす
+             --
+             -- - 各Shgifへ 'Updater' を指定して適用できるようにする
              | Container {
                      _title     :: String
                    , _author    :: String

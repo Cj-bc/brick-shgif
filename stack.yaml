@@ -43,7 +43,9 @@ extra-deps:
   - brick-0.46@sha256:78629a4da6b759c78ec264bedc9e794edeb55a302d17015d0278620eef4ebe29,13852
   - tart-0.3@sha256:0dc64a9ffc16f6ead6cc1bd4b6f1323e58c7cca9d605180ac149c665a79a67e3,3241
 # Override default flag values for local packages and extra-deps
-# flags: {}
+flags:
+  tart:
+    libonly: true
 
 # Extra package databases containing global packages
 # extra-package-dbs: []

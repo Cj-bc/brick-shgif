@@ -26,6 +26,7 @@ import Shgif.Type (Shgif(..), Format(..))
 import Shgif.Type.Internal (TimeStamp, addInitialCanvas)
 import Data.Yaml (ParseException, decodeFileEither)
 import Data.Either (isLeft)
+import qualified Data.Text as T
 import Tart.Format (TartFile(..), sortedCanvases)
 import Tart.Canvas (Canvas, canvasSize, prettyPrintCanvas
                    )
@@ -93,6 +94,6 @@ fromCanvasWithMeta title author timestamps cs = Shgif title author Page w h 0 co
     (w, h) = foldr1 (\(x,y ) (x', y') -> (max x x', max y y')) whList
     whList = fmap (canvasSize) cs
     convertedData :: [TimeStamp]
-    convertedData = zip timestamps $ fmap (lines . prettyPrintCanvas False . pure) cs
+    convertedData = zip timestamps $ fmap (T.lines . prettyPrintCanvas False . pure) cs
 
 

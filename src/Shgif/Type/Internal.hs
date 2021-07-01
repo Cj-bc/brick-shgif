@@ -22,6 +22,7 @@ import Data.Yaml (FromJSON(..), withObject, (.:), Object(..), withArray
 import Data.HashMap.Lazy ((!))
 import qualified Data.Vector as V
 import Data.Text (unpack, splitOn, Text)
+import qualified Data.Text as T
 import Data.Maybe (fromMaybe)
 
 import GHC.Generics (Generic)
@@ -55,7 +56,7 @@ data Format = Page -- ^ list data as list of String
             deriving (Generic, Show)
 
 -- | TimeStamp is used to represent one _frame_
-type TimeStamp = (Int, [String])
+type TimeStamp = (Int, [Text])
 
 -- | 'Shgif.Updater'
 --
@@ -129,29 +130,29 @@ parseTimeStamp = withObject "Frame" $ \f -> timeStamp
                     <$> f .: "timestamp"
                     <*> parseContents (f ! "contents")
     where
-        timeStamp :: Int -> [String] -> TimeStamp
+        timeStamp :: Int -> [Text] -> TimeStamp
         timeStamp time ds = (time, ds)
 
-parseContents :: Value -> Parser [String]
-parseContents = withText "Contents" (return . tail . lines . unpack)
+parseContents :: Value -> Parser [Text]
+parseContents = withText "Contents" (return . tail . T.lines)
 -- }}}
 
 
 -- | Convert 'Shgif' into 'Tart.Canvas' datatype
 -- This function only determine which frame to render, and pass it to 'canvasFromText'
 shgifToCanvas :: Shgif -> IO Canvas
-shgifToCanvas (Shgif _ _ _ w h tick ds _) = canvasFromText $ unlines $ map (addWidthPadding w) $ addHeightPadding  h frame
+shgifToCanvas (Shgif _ _ _ w h tick ds _) = canvasFromText . T.unlines . map (addWidthPadding w) $ addHeightPadding  h frame
     where
         currentFrame t = fromMaybe (currentFrame (t-1)) $ lookup t ds
-        frame :: [String]
+        frame :: [Text]
         frame = currentFrame tick
 
-        addWidthPadding :: Int -> String -> String
-        addWidthPadding _ [] = []
-        addWidthPadding req_width x | length x < req_width = x ++ replicate (req_width - (length x)) ' '
+        addWidthPadding :: Int -> Text -> Text
+        addWidthPadding req_width x | x == T.empty = T.empty
+        addWidthPadding req_width x | T.length x < req_width = T.concat [x, (T.replicate (req_width - (T.length x)) " ")]
                                     | otherwise            = x
 
-        addHeightPadding :: Int -> [String] -> [String]
+        addHeightPadding :: Int -> [Text] -> [Text]
         addHeightPadding req_height xs | length xs < req_height = xs ++ replicate (req_height - length xs) ""
                                        | otherwise              = xs
 

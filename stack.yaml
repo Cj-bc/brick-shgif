@@ -17,7 +17,7 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-18.0
+resolver: lts-18.8
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -40,8 +40,9 @@ packages:
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
 extra-deps:
-  - brick-0.46@sha256:78629a4da6b759c78ec264bedc9e794edeb55a302d17015d0278620eef4ebe29,13852
-  - tart-0.3@sha256:0dc64a9ffc16f6ead6cc1bd4b6f1323e58c7cca9d605180ac149c665a79a67e3,3241
+  - github: jtdaugherty/tart
+    commit: 6d8b08e88ed72158874ec10ae8537913d23cda54
+
 # Override default flag values for local packages and extra-deps
 flags:
   tart:

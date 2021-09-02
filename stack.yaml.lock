@@ -4,23 +4,20 @@
 #   https://docs.haskellstack.org/en/stable/lock_files
 
 snapshots:
-- original: lts-18.0
+- original: lts-18.8
   completed:
-    sha256: c632012da648385b9fa3c29f4e0afd56ead299f1c5528ee789058be410e883c0
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/0.yaml
-    size: 585393
+    sha256: 93a107557e8691ed5ca17beaee41e68222b142c48868fc8c04a4181fb233477d
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/8.yaml
+    size: 587126
 packages:
 - original:
-    hackage: brick-0.46@sha256:78629a4da6b759c78ec264bedc9e794edeb55a302d17015d0278620eef4ebe29,13852
+    url: https://github.com/jtdaugherty/tart/archive/6d8b08e88ed72158874ec10ae8537913d23cda54.tar.gz
   completed:
     pantry-tree:
-      sha256: 1a8c529c82fd79070f4c48bdd34496a864c88130e8c07a766fa1111823f6866d
-      size: 3752
-    hackage: brick-0.46@sha256:78629a4da6b759c78ec264bedc9e794edeb55a302d17015d0278620eef4ebe29,13852
-- original:
-    hackage: tart-0.3@sha256:0dc64a9ffc16f6ead6cc1bd4b6f1323e58c7cca9d605180ac149c665a79a67e3,3241
-  completed:
-    pantry-tree:
-      sha256: 78d2ce69dfcdbbd579dd64ec56ccf2075711f572fb103922c7e6e8e0f198a792
-      size: 2799
-    hackage: tart-0.3@sha256:0dc64a9ffc16f6ead6cc1bd4b6f1323e58c7cca9d605180ac149c665a79a67e3,3241
+      sha256: af9690d94ae9e652713a6136d1d6ee978c86412763930d5286bff1ba50ef6ffb
+      size: 3246
+    version: '0.3'
+    name: tart
+    sha256: 826a72c59b4627050ae75b5dc6083423d6b317cad506b99477bec23b55607e2e
+    url: https://github.com/jtdaugherty/tart/archive/6d8b08e88ed72158874ec10ae8537913d23cda54.tar.gz
+    size: 290876

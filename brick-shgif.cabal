@@ -1,0 +1,96 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           brick-shgif
+version:        1.5.0.1
+description:    Please see the README on GitHub at <https://github.com/Cj-bc/brick-shgif#readme>
+homepage:       https://github.com/Cj-bc/brick-shgif#readme
+bug-reports:    https://github.com/Cj-bc/brick-shgif/issues
+author:         Cj.bc_sd a.k.a Cj-bc
+maintainer:     cj.bc-sd@outlook.jp
+copyright:      MIT
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/Cj-bc/brick-shgif
+
+library
+  exposed-modules:
+      Brick.Extensions.Shgif.Events
+      Brick.Extensions.Shgif.Widgets
+      Shgif
+      Shgif.Loader
+      Shgif.Type
+      Shgif.Type.Internal
+      Shgif.Updater
+  other-modules:
+      Paths_brick_shgif
+  hs-source-dirs:
+      src
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , brick
+    , lens
+    , tart
+    , text
+    , unordered-containers
+    , vector
+    , vty
+    , yaml
+  default-language: Haskell2010
+
+executable shgifViewer
+  main-is: shgifViewer.hs
+  other-modules:
+      Paths_brick_shgif
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , brick
+    , brick-shgif
+    , filepath
+    , fsnotify
+    , lens
+    , optparse-applicative
+    , tart
+    , text
+    , unordered-containers
+    , vector
+    , vty
+    , yaml
+  default-language: Haskell2010
+
+test-suite brick-shgif-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_brick_shgif
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , brick
+    , brick-shgif
+    , lens
+    , tart
+    , text
+    , unordered-containers
+    , vector
+    , vty
+    , yaml
+  default-language: Haskell2010

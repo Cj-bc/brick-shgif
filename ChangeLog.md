@@ -6,6 +6,16 @@ and this project adheres to [Haskell Package Versioning policy](https://pvp.hask
 
 ## Unreleased changes
 
+## [1.5.1.0] - 2021-09-02
+
+### Changed
+- Update stack LTS to 18.8
+- Update brick version to 0.62 (included in LTS 18.8)
+- Use cabal file directly instead of package.yaml
+
+### Removed
+- package.yaml as it's now not-recommended by stack
+
 ## [1.5.0.1] - 2020-06-19
 
 ### Fixed

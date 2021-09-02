@@ -45,4 +45,5 @@ mainWithTick chanCapacity tickRate app initialState = do
       threadDelay tickRate
 
     let buildVty = Graphics.Vty.mkVty Graphics.Vty.defaultConfig
-    customMain buildVty (Just eventChan) app initialState
+    vty <- buildVty
+    customMain vty buildVty (Just eventChan) app initialState

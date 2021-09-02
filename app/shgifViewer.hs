@@ -127,7 +127,9 @@ createBrickMain ch speed s = do
         writeBChan ch Tick
         threadDelay speed
 
-    void $ customMain (Vty.mkVty Vty.defaultConfig) (Just ch) app s
+    let mkvty = Vty.mkVty Vty.defaultConfig
+    vty <- mkvty
+    void $ customMain vty mkvty (Just ch) app s
 -- }}}
 
 main :: IO ()
@@ -155,8 +157,5 @@ main = do
     let initialState = AppState sgf' f filename 0
     ch <- newBChan 10
 
-    case watch of
-        False -> void $ createBrickMain ch speed initialState
-        True  -> do
-                watchUpdate ch filename
-                void $ createBrickMain ch speed initialState
+    when watch $ watchUpdate ch filename
+    void $ createBrickMain ch speed initialState

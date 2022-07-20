@@ -13,7 +13,7 @@ import System.FilePath.Posix (takeDirectory)
 import Control.Concurrent (threadDelay, forkIO)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad (when, void, forever)
-import Control.Lens (makeLenses, (^.), (&), (.~), over, set)
+import Control.Lens (makeLenses, (^.), (&), (.~), over, set, use)
 import qualified Graphics.Vty as Vty
 import Brick
 import Brick.BChan (newBChan, writeBChan, BChan)
@@ -84,18 +84,16 @@ ui s = [vBox [shgif (s^.shellGif)
 eHandler :: BrickEvent Name CustomEvent -> EventM Name AppState ()
 eHandler (VtyEvent (Vty.EvKey (Vty.KChar 'q') [])) = halt
 eHandler (AppEvent FileUpdated) = do
-    s <- get
-    (newsgf, ri) <- liftIO $ either (const (s^.shellGif, 0))
-                              (\s -> (s, 1000)) <$> fromFile (s^.fileName)
-    put . set shellGif newsgf
-             . set reloadedInfo ri
-             $ s
+    shgif <- use shellGif
+    fn <- use fileName
+    (newsgf, ri) <- liftIO $ either (const (shgif, 0))
+                              (\s -> (s, 1000)) <$> fromFile fn
+    modify $ set shellGif newsgf . set reloadedInfo ri
 eHandler (AppEvent Tick)  = do
-    s <- get
-    newsgf <- liftIO ((s^.updater) (s^.shellGif))
-    put . set shellGif newsgf
-             . over reloadedInfo updateReloadedInfo
-             $ s
+    updater <- use updater
+    shgif <- use shellGif
+    newsgf <- liftIO $ updater shgif
+    modify $ set shellGif newsgf . over reloadedInfo updateReloadedInfo
     where
         updateReloadedInfo 0 = 0
         updateReloadedInfo i = i - 1

@@ -64,7 +64,7 @@ optionInfo = info (appFlags <**> helper) (fullDesc)
 app :: App AppState CustomEvent Name
 app = App {appDraw = ui
           , appHandleEvent = eHandler
-          , appStartEvent = return
+          , appStartEvent = return ()
           , appChooseCursor = neverShowCursor
           , appAttrMap = const $ attrMap Vty.defAttr [] }
 
@@ -81,23 +81,25 @@ ui s = [vBox [shgif (s^.shellGif)
 
 
 -- Event handler {{{1
-eHandler :: AppState -> BrickEvent Name CustomEvent -> EventM Name (Next AppState)
-eHandler s (VtyEvent (Vty.EvKey (Vty.KChar 'q') [])) = halt s
-eHandler s (AppEvent FileUpdated) = do
+eHandler :: BrickEvent Name CustomEvent -> EventM Name AppState ()
+eHandler (VtyEvent (Vty.EvKey (Vty.KChar 'q') [])) = halt
+eHandler (AppEvent FileUpdated) = do
+    s <- get
     (newsgf, ri) <- liftIO $ either (const (s^.shellGif, 0))
                               (\s -> (s, 1000)) <$> fromFile (s^.fileName)
-    continue . set shellGif newsgf
+    put . set shellGif newsgf
              . set reloadedInfo ri
              $ s
-eHandler s (AppEvent Tick)  = do
+eHandler (AppEvent Tick)  = do
+    s <- get
     newsgf <- liftIO ((s^.updater) (s^.shellGif))
-    continue . set shellGif newsgf
+    put . set shellGif newsgf
              . over reloadedInfo updateReloadedInfo
              $ s
     where
         updateReloadedInfo 0 = 0
         updateReloadedInfo i = i - 1
-eHandler s _ = continue s
+eHandler _ = pure ()
 
 
 -- helper functions {{{1

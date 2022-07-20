@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           brick-shgif
-version:        1.5.0.1
+version:        1.5.1.0
 description:    Please see the README on GitHub at <https://github.com/Cj-bc/brick-shgif#readme>
 homepage:       https://github.com/Cj-bc/brick-shgif#readme
 bug-reports:    https://github.com/Cj-bc/brick-shgif/issues
